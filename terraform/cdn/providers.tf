@@ -6,7 +6,7 @@ provider "aws" {
     tags = {
       "Project"     = "aws-network-specialty"
       "Environment" = "general"
-      "Demo"        = "VPC"
+      "Demo"        = "CDN"
       "Terraform"   = true
     }
   }
@@ -24,7 +24,7 @@ terraform {
   backend "remote" {
     organization = "3ware"
     workspaces {
-      name = "aws-net-spec-vpc"
+      name = "aws-net-spec-cdn"
     }
   }
 }
