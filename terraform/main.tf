@@ -4,7 +4,7 @@ locals {
 
 module "vpc" {
   source  = "terraform-aws-modules/vpc/aws"
-  version = "~> 3.12.0"
+  version = "~> 3.14.2"
 
   name = "a4l-vpc1"
   azs  = ["us-east-1a", "us-east-1b", "us-east-1c"]
