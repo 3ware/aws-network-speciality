@@ -1,5 +1,5 @@
 provider "aws" {
-  profile = "ans-gen" #* Need to create 'dev' profile 
+  profile = "ans-gen"
   region  = "us-east-1"
 
   default_tags {
