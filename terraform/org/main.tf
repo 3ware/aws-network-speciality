@@ -43,6 +43,7 @@ module "iam_assumable_role" {
   ]
 }
 
+#! tfsec:ignore:aws-cloudtrail-enable-at-rest-encryption
 resource "aws_cloudtrail" "this" {
   depends_on = [
     module.s3_bucket
