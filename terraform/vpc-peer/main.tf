@@ -13,8 +13,39 @@ module "vpc" {
   enable_dns_support   = true
 }
 
+module "endpoints" {
+  for_each = var.vpc
+  source   = "terraform-aws-modules/vpc/aws//modules/vpc-endpoints"
+  version  = "~> 3.14.0"
 
-# resource "aws_security_group_rule" "bastion_ingress" {
+  vpc_id = module.vpc[each.key].vpc_id
+
+  endpoints = {
+    ssm = {
+      service             = "ssm"
+      private_dns_enabled = true
+      subnet_ids          = module.vpc[each.key].private_subnets
+      #security_group_ids  = 
+    },
+    ssmmessages = {
+      service             = "ssmmessages"
+      private_dns_enabled = true
+      subnet_ids          = module.vpc[each.key].private_subnets
+      #security_group_ids  = 
+    },
+    ec2messages = {
+      service             = "ec2messages"
+      private_dns_enabled = true
+      subnet_ids          = module.vpc[each.key].private_subnets
+      #security_group_ids  =
+    },
+  }
+}
+
+
+
+
+# resource "aws_security_group_rule" "" {
 #   description       = "Inbound traffic to bastion hosts"
 #   type              = "ingress"
 #   from_port         = local.admin_port
