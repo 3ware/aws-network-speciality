@@ -1,6 +1,7 @@
 data "aws_iam_policy_document" "ec2_role" {
   statement {
     sid = "EC2InstanceProfilePolicy"
+    #! tfsec:ignore:aws-iam-no-policy-wildcards
     actions = [
       "ssm:DescribeAssociation",
       "ssm:GetDeployablePatchSnapshotForInstance",
@@ -30,6 +31,7 @@ data "aws_iam_policy_document" "ec2_role" {
       "s3:*",
       "sns:*"
     ]
+    #! tfsec:ignore:aws-iam-no-policy-wildcards
     resources = [
       "*"
     ]
