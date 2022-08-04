@@ -7,8 +7,11 @@ variable "vpc" {
   }))
 }
 
-variable "peer_a_b" {
-  description = "Feature toggle to enable peering between VPCA and VPCB"
-  type        = bool
-  default     = false
+variable "vpc_peers" {
+  description = "A map of VPC peers to create"
+  type = map(object({
+    this_vpc_id = string
+    that_vpc_id = string
+    enabled     = bool
+  }))
 }
