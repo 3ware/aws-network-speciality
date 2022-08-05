@@ -69,6 +69,8 @@ module "cdn" {
   source  = "terraform-aws-modules/cloudfront/aws"
   version = "~> 2.9.3"
 
+  aliases = var.demo_domain_name != null ? ["merlin.${var.demo_domain_name}"] : null
+
   comment     = "Top 10 Cats CDN"
   enabled     = true
   price_class = "PriceClass_All"
