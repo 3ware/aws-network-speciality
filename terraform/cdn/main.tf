@@ -119,3 +119,21 @@ module "acm" {
   zone_id             = data.aws_route53_zone.demo[0].zone_id
   wait_for_validation = true
 }
+
+module "cname_record" {
+  count   = var.demo_domain_name != null ? 1 : 0
+  source  = "terraform-aws-modules/route53/aws//modules/records"
+  version = "~> 2.9.0"
+
+  zone_id = data.aws_route53_zone.demo[0].zone_id
+  records = [
+    {
+      name = "merlin"
+      type = "A"
+      alias = {
+        name    = module.cdn[0].cloudfront_distribution_domain_name
+        zone_id = module.cdn[0].cloudfront_distribution_hosted_zone_id
+      }
+    }
+  ]
+}
