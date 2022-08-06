@@ -1,5 +1,10 @@
 locals {
+  #* Bucket name is shared between the resource and the policy. This overcomes cycle dependancy between the two
   bucket_name = "ans-cdn-top10cats-demo-${random_string.random.result}"
+  #* Do not create the CNAME when the demo domain name is not specified
+  alternate_cname = var.demo_domain_name != null ? "merlin.${var.demo_domain_name}" : null
+  #* Use the default CloudFront certificate when the demo domain name is not specified
+  use_default_cert = var.demo_domain_name == null
 }
 
 data "aws_iam_policy_document" "bucket_policy" {
@@ -69,7 +74,7 @@ module "cdn" {
   source  = "terraform-aws-modules/cloudfront/aws"
   version = "~> 2.9.3"
 
-  aliases = var.demo_domain_name != null ? ["merlin.${var.demo_domain_name}"] : null
+  aliases = var.demo_domain_name != null ? [local.alternate_cname] : null
 
   comment     = "Top 10 Cats CDN"
   enabled     = true
@@ -93,6 +98,24 @@ module "cdn" {
   }
 
   viewer_certificate = {
-    cloudfront_default_certificate = true
+    acm_certificate_arn            = local.use_default_cert ? null : module.acm[0].acm_certificate_arn
+    mminimum_protocol_version      = local.use_default_cert ? null : "TLSv1.2_2021"
+    ssl_support_method             = local.use_default_cert ? null : "sni-only"
+    cloudfront_default_certificate = local.use_default_cert
   }
+}
+
+data "aws_route53_zone" "demo" {
+  count = var.demo_domain_name != null ? 1 : 0
+  name  = var.demo_domain_name
+}
+
+module "acm" {
+  count   = var.demo_domain_name != null ? 1 : 0
+  source  = "terraform-aws-modules/acm/aws"
+  version = "~> 4.0.1"
+
+  domain_name         = local.alternate_cname
+  zone_id             = data.aws_route53_zone.demo[0].zone_id
+  wait_for_validation = true
 }
