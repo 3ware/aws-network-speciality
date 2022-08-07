@@ -9,19 +9,35 @@ locals {
 
 data "aws_iam_policy_document" "bucket_policy" {
   statement {
+    sid = "AllowPublicAccessToS3Bucket"
     principals {
       type        = "*"
       identifiers = ["*"]
     }
-
-    actions = [
-      "s3:GetObject",
-    ]
-
-    resources = [
-      "arn:aws:s3:::${local.bucket_name}/*",
-    ]
+    actions   = ["s3:GetObject", ]
+    resources = ["arn:aws:s3:::${local.bucket_name}/*", ]
   }
+}
+
+data "aws_iam_policy_document" "bucket_policy_with_oai" {
+  statement {
+    sid = "AllowAccessFromCloudFrontToS3Bucket"
+    principals {
+      type        = "AWS"
+      identifiers = module.cdn[0].cloudfront_origin_access_identity_iam_arns
+    }
+    actions   = ["s3:GetObject"]
+    resources = ["arn:aws:s3:::${local.bucket_name}/*"]
+  }
+}
+
+data "aws_iam_policy_document" "bucket_policy_combined" {
+  source_policy_documents = [(
+    var.secure_s3_bucket ?
+    data.aws_iam_policy_document.bucket_policy_with_oai.json :
+    data.aws_iam_policy_document.bucket_policy.json
+    )
+  ]
 }
 
 resource "random_string" "random" {
@@ -45,7 +61,7 @@ module "s3_bucket" {
   force_destroy = true
 
   attach_policy = true
-  policy        = data.aws_iam_policy_document.bucket_policy.json
+  policy        = data.aws_iam_policy_document.bucket_policy_combined.json
 
   website = {
     index_document = "index.html"
@@ -83,7 +99,17 @@ module "cdn" {
   origin = {
     top10cats = {
       domain_name = module.s3_bucket.s3_bucket_bucket_regional_domain_name
+
+      #? Can s3_origin_config be added dynamically based on the value of var.secure_s3_bucket
+      s3_origin_config = {
+        origin_access_identity = "top-10-cats-bucket"
+      }
     }
+  }
+
+  create_origin_access_identity = var.secure_s3_bucket ? true : false
+  origin_access_identities = {
+    top-10-cats-bucket = "top-10-cats-bucket"
   }
 
   default_root_object = "index.html"

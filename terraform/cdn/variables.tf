@@ -9,3 +9,9 @@ variable "demo_domain_name" {
   type        = string
   default     = null
 }
+
+variable "secure_s3_bucket" {
+  description = "Set to true to restrict access to the S3 bucket to the CloudFront OAI"
+  type        = bool
+  default     = false
+}
