@@ -101,9 +101,10 @@ module "cdn" {
       domain_name = module.s3_bucket.s3_bucket_bucket_regional_domain_name
 
       #? Can s3_origin_config be added dynamically based on the value of var.secure_s3_bucket
-      s3_origin_config = {
-        origin_access_identity = "top-10-cats-bucket"
-      }
+      #* Uncomment to associated the OAI with the cloudfront distribution and secure the S3 bucket
+      # s3_origin_config = {
+      #   origin_access_identity = "top-10-cats-bucket"
+      # }
     }
   }
 
