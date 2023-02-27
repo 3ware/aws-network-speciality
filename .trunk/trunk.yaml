@@ -20,6 +20,7 @@ lint:
     - linters: [prettier, markdownlint]
       paths:
         - CHANGELOG.md
+        - terraform/**/README.md #* skip documents generates by terraform-docs
 runtimes:
   enabled:
     - go@1.19.5
