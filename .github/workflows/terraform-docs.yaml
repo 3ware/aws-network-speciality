@@ -13,5 +13,5 @@ on:
 
 jobs:
   terraform-docs:
-    uses: 3ware/workflows/.github/workflows/terraform-docs.yaml@v1.7.1
+    uses: 3ware/workflows/.github/workflows/terraform-docs.yaml@v1.9.3
     secrets: inherit
