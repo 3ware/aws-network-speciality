@@ -20,7 +20,7 @@ module.exports = {
         "terraform-ci",
         "trunk",
         "vpc",
-        "vpc-peer"
+        "vpc-peer",
       ],
     ],
     //"signed-off-by": [1, "always", "Signed-off-by:"],
