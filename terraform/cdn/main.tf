@@ -1,12 +1,11 @@
 locals {
-  #* Bucket name is shared between the resource and the policy. This overcomes cycle dependancy between the two
+  #* Bucket name is shared between the resource and the policy. This overcomes cycle dependency between the two
   bucket_name = "ans-cdn-top10cats-demo-${random_string.random.result}"
   #* Do not create the CNAME when the demo domain name is not specified
   alternate_cname = var.demo_domain_name != null ? "merlin.${var.demo_domain_name}" : null
   #* Use the default CloudFront certificate when the demo domain name is not specified
   use_default_cert = var.demo_domain_name == null
 }
-
 data "aws_iam_policy_document" "bucket_policy" {
   statement {
     sid = "AllowPublicAccessToS3Bucket"
