@@ -25,8 +25,9 @@ terraform {
     }
   }
 
-  backend "remote" {
+  cloud {
     organization = "3ware"
+    hostname     = "app.terraform.io"
     workspaces {
       name = "aws-net-spec-cdn"
     }
