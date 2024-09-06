@@ -32,7 +32,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           header: preview
           message: |
-            ## Preview of Tofu changes in ${{ github.event.pull_request.head.sha }}
+            ## Preview of tofu changes in ${{ github.event.pull_request.head.sha }}
 
             :warning: preview is being created... please stand by!
 
@@ -47,7 +47,7 @@ jobs:
       - name: Install Terramate
         uses: terramate-io/terramate-action@b5d1461d435ba454179045ea062bbecb32738913 # v2.0.0
 
-      - name: Setup Tofu
+      - name: Setup opentofu
         uses: opentofu/setup-opentofu@12f4debbf681675350b6cd1f0ff8ecfbda62027b # v1.0.4
         with:
           tofu_version: 1.8.1
@@ -57,8 +57,8 @@ jobs:
       - name: Check Terramate formatting
         run: terramate fmt --check
 
-      - name: Check Tofu formatting
-        run: Tofu fmt -recursive -check -diff
+      - name: Check opentofu formatting
+        run: tofu fmt -recursive -check -diff
 
       # Check for changed stacks
       - name: List changed stacks
@@ -74,19 +74,19 @@ jobs:
           role-to-assume: ${{ secrets.AWS_ANS_OIDC_ROLE_ARN }}
           role-external-id: ${{ secrets.AWS_ANS_OIDC_EXTERNAL_ID }}
 
-      # Run the Tofu preview via Terramate in each changed stack
-      - name: Initialize Tofu in changed stacks
+      # Run the opentofu preview via Terramate in each changed stack
+      - name: Initialize openofu in changed stacks
         if: steps.list.outputs.stdout
         run: terramate run --parallel 1 --changed -- tofu init -lock-timeout=5m
 
-      - name: Validate Tofu configuration in changed stacks
+      - name: Validate opentofu configuration in changed stacks
         if: steps.list.outputs.stdout
         run: terramate run --parallel 5 --changed -- tofu validate
 
-      - name: Plan Tofu changes in changed stacks
+      - name: Plan opentofu changes in changed stacks
         if: steps.list.outputs.stdout
         run: |
-          terramate run --parallel 5 --changed --sync-preview --Tofu-plan-file=out.tfplan --debug-preview-url preview_url.txt --continue-on-error -- Tofu plan -out out.tfplan -detailed-exitcode -lock=false
+          terramate run --parallel 5 --changed --sync-preview --tofu-plan-file=out.tfplan --debug-preview-url preview_url.txt --continue-on-error -- tofu plan -out out.tfplan -detailed-exitcode -lock=false
         env:
           GITHUB_TOKEN: ${{ github.token }}
 
@@ -95,7 +95,7 @@ jobs:
         if: steps.list.outputs.stdout
         id: comment
         run: |
-          echo >>pr-comment.txt "## Preview of Tofu changes in ${{ github.event.pull_request.head.sha }}"
+          echo >>pr-comment.txt "## Preview of opentofu changes in ${{ github.event.pull_request.head.sha }}"
           echo >>pr-comment.txt
           echo >>pr-comment.txt "[:mag: View Details on Terramate Cloud]($(cat preview_url.txt))"
           echo >>pr-comment.txt
@@ -105,18 +105,18 @@ jobs:
           echo >>pr-comment.txt "${{ steps.list.outputs.stdout }}"
           echo >>pr-comment.txt '```'
           echo >>pr-comment.txt
-          echo >>pr-comment.txt "#### Tofu Plan"
+          echo >>pr-comment.txt "#### opentofu Plan"
           echo >>pr-comment.txt
-          echo >>pr-comment.txt '```Tofu'
+          echo >>pr-comment.txt '```opentofu'
           terramate run --changed -- tofu show -no-color out.tfplan |& dd bs=1024 count=248 >>pr-comment.txt
-          [ "${PIPESTATUS[0]}" == "141" ] && sed -i 's/#### Tofu Plan/#### :warning: Tofu Plan truncated: please check console output :warning:/' pr-comment.txt
+          [ "${PIPESTATUS[0]}" == "141" ] && sed -i 's/#### opentofu Plan/#### :warning: opentofu Plan truncated: please check console output :warning:/' pr-comment.txt
           echo >>pr-comment.txt '```'
           cat pr-comment.txt >>$GITHUB_STEP_SUMMARY
 
       - name: Generate preview when no stacks changed
         if: success() && !steps.list.outputs.stdout
         run: |
-          echo >>pr-comment.txt "## Preview of Tofu changes in ${{ github.event.pull_request.head.sha }}"
+          echo >>pr-comment.txt "## Preview of opentofu changes in ${{ github.event.pull_request.head.sha }}"
           echo >>pr-comment.txt
           echo >>pr-comment.txt "### Changed Stacks"
           echo >>pr-comment.txt
@@ -126,7 +126,7 @@ jobs:
       - name: Generate preview when things failed
         if: failure()
         run: |
-          echo >>pr-comment.txt "## Preview of Tofu changes in ${{ github.event.pull_request.head.sha }}"
+          echo >>pr-comment.txt "## Preview of opentofu changes in ${{ github.event.pull_request.head.sha }}"
           echo >>pr-comment.txt
           echo >>pr-comment.txt "[:mag: View Details on Terramate Cloud]($(cat preview_url.txt))"
           echo >>pr-comment.txt
