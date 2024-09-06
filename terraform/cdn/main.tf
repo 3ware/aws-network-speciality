@@ -1,3 +1,5 @@
+# trunk-ignore-all(trivy) Bucket should be public initially before moving behind cloud front
+# logging and version not required for demo
 locals {
   #* Bucket name is shared between the resource and the policy. This overcomes cycle dependency between the two
   bucket_name = "ans-cdn-top10cats-demo-${random_string.random.result}"
@@ -47,11 +49,16 @@ module "template_files" {
 
   base_dir = "${path.module}/static"
 }
+
 module "s3_bucket" {
   source = "git::https://github.com/terraform-aws-modules/terraform-aws-s3-bucket.git?ref=8a0b697adfbc673e6135c70246cff7f8052ad95a"
 
-  bucket        = local.bucket_name
-  force_destroy = true
+  bucket                  = local.bucket_name
+  block_public_acls       = false
+  block_public_policy     = false
+  ignore_public_acls      = false
+  restrict_public_buckets = false
+  force_destroy           = true
 
   attach_policy = true
   policy        = data.aws_iam_policy_document.bucket_policy_combined.json
