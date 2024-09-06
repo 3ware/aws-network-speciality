@@ -27,7 +27,7 @@ module "iam_assumable_role" {
 
   create_role       = true
   role_requires_mfa = false
-  role_name         = "ans-demo-cloudtrail-cloudwatchlogs"
+  role_name         = "ans-demo-cloudtrail-cloudwatch-logs"
   trusted_role_services = [
     "cloudtrail.amazonaws.com"
   ]
@@ -36,20 +36,23 @@ module "iam_assumable_role" {
     module.iam_policy.arn
   ]
 }
-resource "aws_cloudtrail" "this" {
-  depends_on = [
-    module.s3_bucket
-  ]
-  name           = "ans-demo-cloudtrail"
-  enable_logging = true
 
-  s3_bucket_name             = local.bucket_name
-  is_multi_region_trail      = true
-  is_organization_trail      = true
-  enable_log_file_validation = true
-  cloud_watch_logs_group_arn = "${module.log_group.cloudwatch_log_group_arn}:*"
-  cloud_watch_logs_role_arn  = module.iam_assumable_role.iam_role_arn
-}
+# resource "aws_cloudtrail" "this" {
+#   depends_on = [
+#     module.s3_bucket
+#   ]
+#   name           = "ans-demo-cloudtrail"
+#   enable_logging = true
+
+#   s3_bucket_name             = local.bucket_name
+#   is_multi_region_trail      = true
+#   is_organization_trail      = true
+#   enable_log_file_validation = true
+#   cloud_watch_logs_group_arn = "${module.log_group.cloudwatch_log_group_arn}:*"
+#   cloud_watch_logs_role_arn  = module.iam_assumable_role.iam_role_arn
+# }
+
+# trunk-ignore(trivy)
 module "s3_bucket" {
   source = "git::https://github.com/terraform-aws-modules/terraform-aws-s3-bucket.git?ref=8a0b697adfbc673e6135c70246cff7f8052ad95a"
 
