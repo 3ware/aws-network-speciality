@@ -5,8 +5,8 @@ provider "aws" {
   default_tags {
     tags = {
       "Project"     = "aws-network-specialty"
-      "Environment" = "general"
-      "Demo"        = "CDN"
+      "Environment" = "Dev"
+      "Service"     = "CDN"
       "Terraform"   = true
     }
   }
