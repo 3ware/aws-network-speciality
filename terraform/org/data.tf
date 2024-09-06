@@ -1,9 +1,6 @@
 data "aws_caller_identity" "current" {}
-
 data "aws_organizations_organization" "current" {}
-
 data "aws_region" "current" {}
-
 data "aws_iam_policy_document" "bucket_policy" {
   statement {
     sid = "AWSCloudTrailAclCheck"
@@ -90,7 +87,6 @@ data "aws_iam_policy_document" "bucket_policy" {
     }
   }
 }
-
 data "aws_iam_policy_document" "cloudwatch" {
   statement {
     sid = "AWSCloudTrailCreateLogStream"
