@@ -4,10 +4,10 @@ provider "aws" {
 
   default_tags {
     tags = {
-      "Project"     = "aws-network-specialty"
-      "Environment" = "Dev"
-      "Service"     = "CDN"
-      "Terraform"   = true
+      "3ware:project-id"       = "aws-network-speciality"
+      "3ware:environment-type" = "dev"
+      "3ware:service"          = "cdn"
+      "3ware:tofu"             = true
     }
   }
 }
