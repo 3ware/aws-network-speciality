@@ -52,7 +52,7 @@ jobs:
       - name: Setup opentofu
         uses: opentofu/setup-opentofu@12f4debbf681675350b6cd1f0ff8ecfbda62027b # v1.0.4
         with:
-          tofu_version: 1.8.1
+          tofu_version: 1.8.2
           tofu_wrapper: false
 
       # Linting
