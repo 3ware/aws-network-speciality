@@ -81,6 +81,9 @@ jobs:
         if: steps.list.outputs.stdout
         run: terramate run --parallel 1 --changed -- tofu init -lock-timeout=5m
 
+      - name: Run git diff to see whats changed
+        run: git diff
+
       - name: Validate OpenTofu configuration in changed stacks
         if: steps.list.outputs.stdout
         run: terramate run --parallel 5 --changed -- tofu validate
