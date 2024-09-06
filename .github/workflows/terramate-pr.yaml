@@ -22,6 +22,8 @@ jobs:
       checks: read
     runs-on: ubuntu-latest
     timeout-minutes: 30
+    env:
+      TF_TOKEN_APP_TERRAFORM_IO: ${{ secrets.TF_TOKEN_APP_TERRAFORM_IO }}
 
     steps:
       # Create Pull Request comment
