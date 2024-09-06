@@ -9,27 +9,21 @@ locals {
     "arn:aws:cloudtrail:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:trail/${local.trail_name}"
   )
 }
-
 module "log_group" {
-  source  = "terraform-aws-modules/cloudwatch/aws//modules/log-group"
-  version = "~> 3.3.0"
+  source = "git::https://github.com/terraform-aws-modules/terraform-aws-cloudwatch.git//modules/log-group?ref=235046ca1ff83ada5f9265583ed96c8b675b0468"
 
   name              = local.trail_name
   retention_in_days = 7
 }
-
 module "iam_policy" {
-  source  = "terraform-aws-modules/iam/aws//modules/iam-policy"
-  version = "~> v5.2.0"
+  source = "git::https://github.com/terraform-aws-modules/terraform-aws-iam.git//modules/iam-policy?ref=89fe17a6549728f1dc7e7a8f7b707486dfb45d89"
 
   name        = "ans-demo-cloudtrail"
   description = "Policy to permit cloudtrail to write to cloudwatch logs"
   policy      = data.aws_iam_policy_document.cloudwatch.json
 }
-
 module "iam_assumable_role" {
-  source  = "terraform-aws-modules/iam/aws//modules/iam-assumable-role"
-  version = "~> v5.2.0"
+  source = "git::https://github.com/terraform-aws-modules/terraform-aws-iam.git//modules/iam-assumable-role?ref=89fe17a6549728f1dc7e7a8f7b707486dfb45d89"
 
   create_role       = true
   role_requires_mfa = false
@@ -42,8 +36,6 @@ module "iam_assumable_role" {
     module.iam_policy.arn
   ]
 }
-
-#! tfsec:ignore:aws-cloudtrail-enable-at-rest-encryption
 resource "aws_cloudtrail" "this" {
   depends_on = [
     module.s3_bucket
@@ -58,10 +50,8 @@ resource "aws_cloudtrail" "this" {
   cloud_watch_logs_group_arn = "${module.log_group.cloudwatch_log_group_arn}:*"
   cloud_watch_logs_role_arn  = module.iam_assumable_role.iam_role_arn
 }
-
 module "s3_bucket" {
-  source  = "terraform-aws-modules/s3-bucket/aws"
-  version = "~> 3.3.0"
+  source = "git::https://github.com/terraform-aws-modules/terraform-aws-s3-bucket.git?ref=8a0b697adfbc673e6135c70246cff7f8052ad95a"
 
   bucket                  = local.bucket_name
   force_destroy           = true
