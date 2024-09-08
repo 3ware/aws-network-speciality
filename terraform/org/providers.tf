@@ -1,5 +1,6 @@
 provider "aws" {
-  region = "us-east-1"
+  profile = "3ware-org-admin"
+  region  = "us-east-1"
 
   default_tags {
     tags = {
@@ -11,7 +12,7 @@ provider "aws" {
   }
 }
 terraform {
-  required_version = ">= 1.7.2"
+  required_version = ">= 1.7.1"
   required_providers {
     aws = {
       source  = "hashicorp/aws"
@@ -19,11 +20,11 @@ terraform {
     }
   }
 
-  cloud {
-    organization = "3ware"
-    hostname     = "app.terraform.io"
-    workspaces {
-      name = "aws-net-spec-org"
-    }
-  }
+  # cloud {
+  #   organization = "3ware"
+  #   hostname     = "app.terraform.io"
+  #   workspaces {
+  #     name = "aws-net-spec-org"
+  #   }
+  # }
 }
