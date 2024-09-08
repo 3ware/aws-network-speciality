@@ -12,7 +12,7 @@ provider "aws" {
   }
 }
 terraform {
-  required_version = ">= 1.7.1"
+  required_version = ">= 1.8.2"
   required_providers {
     aws = {
       source  = "hashicorp/aws"
@@ -20,11 +20,11 @@ terraform {
     }
   }
 
-  # cloud {
-  #   organization = "3ware"
-  #   hostname     = "app.terraform.io"
-  #   workspaces {
-  #     name = "aws-net-spec-org"
-  #   }
-  # }
+  cloud {
+    organization = "3ware"
+    hostname     = "app.terraform.io"
+    workspaces {
+      name = "aws-net-spec-org"
+    }
+  }
 }
