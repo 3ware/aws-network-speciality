@@ -25,6 +25,8 @@ jobs:
     timeout-minutes: 30
     env:
       TF_TOKEN_APP_TERRAFORM_IO: ${{ secrets.TF_TOKEN_APP_TERRAFORM_IO }}
+    outputs:
+      plan_id: ${{ steps.tf-plan.outputs.identifier }}
 
     steps:
       - name: Checkout
@@ -42,13 +44,23 @@ jobs:
       - name: Setup OpenTofu
         uses: opentofu/setup-opentofu@12f4debbf681675350b6cd1f0ff8ecfbda62027b # v1.0.4
         with:
+          #TODO: Dynamic version from tenv or something, duplicated in multiple jobs / steps
           tofu_version: 1.8.2
           tofu_wrapper: true
-          # cli_config_credentials_token: ${{ secrets.TF_TOKEN_APP_TERRAFORM_IO }}
 
       - name: Provision TF
+        id: tf-plan
         uses: devsectop/tf-via-pr@8ec105a049bb047a7ed5ee182c9548e2208dce86 # v11.1.0
         with:
+          #TODO: Dynamic working dir using tf-actions of similar, with matrix
           arg_chdir: terraform/org
           # arg_command: default is plan
           arg_lock: false
+
+  inkdrop-run:
+    needs: preview
+    uses: inkdrop-org/inkdrop-visualizer/.github/workflows/inkdrop-plan.yml@main
+    with:
+      terraform_version: 1.8.2 # Your terraform version - Mandatory
+      plan_artifact: ${{ needs.preview.outputs.plan_id }} # The artifact name - Mandatory (Set in previous job)
+      plan_file_name: tfplan # The name of the plan file - Mandatory (Set in previous job)
