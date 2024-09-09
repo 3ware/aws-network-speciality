@@ -1,5 +1,6 @@
 name: OpenTofu Preview
 
+#TODO: Set paths to only run on .tf etc files
 on:
   pull_request:
     types: [opened, synchronize]
@@ -61,6 +62,7 @@ jobs:
     needs: preview
     uses: inkdrop-org/inkdrop-visualizer/.github/workflows/inkdrop-plan.yml@main
     with:
-      terraform_version: 1.8.2 # Your terraform version - Mandatory
-      plan_artifact: ${{ needs.preview.outputs.plan_id }} # The artifact name - Mandatory (Set in previous job)
-      plan_file_name: tfplan # The name of the plan file - Mandatory (Set in previous job)
+      data_branch_name: ${{ github.head_ref }}
+      plan_artifact: ${{ needs.preview.outputs.plan_id }}
+      plan_file_name: tfplan
+      terraform_version: 1.8.2
