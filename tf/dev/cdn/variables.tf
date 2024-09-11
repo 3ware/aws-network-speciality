@@ -8,7 +8,12 @@ variable "environment" {
     condition     = contains(["dev", "prd"], var.environment)
     error_message = "Invalid environment specified. Valid values are: \"dev\" and \"prd\""
   }
+}
 
+variable "service" {
+  description = "The AWS service being deployed"
+  type        = string
+  nullable    = false
 }
 
 variable "enable_cloudfront" {
