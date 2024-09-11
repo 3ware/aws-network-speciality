@@ -22,7 +22,14 @@ runs:
     # Initialise OpenTofu in the directory where terraform file have changed.
     - name: Initialise OpenTofu
       if: ${{ steps.tf-dir.outputs.all_changed_files != '' }}
-      #TODO: Is this required, remove and test when you push org / env secrets
-      working-directory: ${{ steps.tf-dir.outputs.all_changed_files }}
+      # TODO: The last run showed this in the logs:
+      #! '/home/runner/work/.trunk/.trunk/tf/dev/vpc tf/dev/cdn tf/dev/vpc-peer'. No such file or directory
+      #! So, we need to loop this somehow because a composite cannot use a matrix
+      # working-directory: ${{ steps.tf-dir.outputs.all_changed_files }}
       shell: bash
-      run: tofu init --backend=false
+      env:
+        TF_DIRS: ${{ steps.tf-dir.outputs.all_changed_files }}
+      run: |
+        for dir in ${TF_DIRS}; do
+          cd $dir && tofu init --backend=false
+        done
