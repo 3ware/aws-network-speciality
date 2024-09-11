@@ -1,5 +1,6 @@
 provider "aws" {
-  region = "us-east-1"
+  profile = "3ware-dev"
+  region  = "us-east-1"
 
   default_tags {
     tags = {
