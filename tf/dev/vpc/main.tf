@@ -32,24 +32,40 @@ module "vpc" {
   enable_dns_support   = true
 }
 
+# Use for_each to create security group rules to avoid creation of duplicate rules
+# If 2 CIDRs are supplied, the provider creates 2 rules as you can only have 1 CIDR per rule
+# Any CRUD operations where a CIDR is changed could fail because of duplicate values
+# It is simpler to create 1 rule resource per CIDR block using for_each
 resource "aws_security_group_rule" "bastion_ingress" {
+  for_each          = var.trusted_ips
   description       = "Inbound traffic to bastion hosts"
   type              = "ingress"
   from_port         = local.admin_port
   to_port           = local.admin_port
   protocol          = "tcp"
   security_group_id = aws_security_group.bastion.id
-  cidr_blocks       = var.trusted_ips
+  cidr_blocks       = [each.value]
+
+  lifecycle {
+    create_before_destroy = true
+  }
 }
+
 resource "aws_security_group_rule" "bastion_egress" {
+  for_each          = toset(module.vpc.private_subnets_cidr_blocks)
   description       = "Outbound traffic private subnets"
   type              = "egress"
   from_port         = local.admin_port
   to_port           = local.admin_port
   protocol          = "tcp"
   security_group_id = aws_security_group.bastion.id
-  cidr_blocks       = module.vpc.private_subnets_cidr_blocks
+  cidr_blocks       = [each.value]
+
+  lifecycle {
+    create_before_destroy = true
+  }
 }
+
 resource "aws_security_group" "bastion" {
   name        = "A4L-BASTION"
   description = "Security Group for A4L Bastion Host"
@@ -58,7 +74,13 @@ resource "aws_security_group" "bastion" {
   tags = {
     Name = "A4L-BASTION"
   }
+
+  # Ensure any "recreate" changes don't disrupt service
+  lifecycle {
+    create_before_destroy = true
+  }
 }
+
 resource "aws_security_group_rule" "internal_ingress" {
   description              = "Inbound traffic to internal hosts"
   type                     = "ingress"
@@ -67,7 +89,12 @@ resource "aws_security_group_rule" "internal_ingress" {
   protocol                 = "tcp"
   security_group_id        = aws_security_group.internal.id
   source_security_group_id = aws_security_group.bastion.id
+
+  lifecycle {
+    create_before_destroy = true
+  }
 }
+
 # trunk-ignore(trivy/AVD-AWS-0104): Egress rule
 resource "aws_security_group_rule" "internal_egress" {
   description       = "Outbound traffic from internal hosts"
@@ -77,7 +104,12 @@ resource "aws_security_group_rule" "internal_egress" {
   protocol          = -1
   security_group_id = aws_security_group.internal.id
   cidr_blocks       = ["0.0.0.0/0"]
+
+  lifecycle {
+    create_before_destroy = true
+  }
 }
+
 resource "aws_security_group" "internal" {
   name        = "A4L-INTERNAL"
   description = "Security Group for A4L internal Host"
@@ -86,11 +118,17 @@ resource "aws_security_group" "internal" {
   tags = {
     Name = "A4L-INTERNAL"
   }
+
+  lifecycle {
+    create_before_destroy = true
+  }
 }
+
 resource "aws_key_pair" "a4l" {
   key_name   = "A4L"
   public_key = var.ssh_key
 }
+
 # trunk-ignore(trivy)
 # trunk-ignore(checkov)
 resource "aws_instance" "a4l_bastion" {
@@ -105,6 +143,7 @@ resource "aws_instance" "a4l_bastion" {
     Name = "A4L-BASTION"
   }
 }
+
 # trunk-ignore(trivy)
 # trunk-ignore(checkov)
 resource "aws_instance" "a4l_internal" {
