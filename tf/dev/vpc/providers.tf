@@ -4,8 +4,8 @@ provider "aws" {
   default_tags {
     tags = {
       "3ware:project-id"       = "aws-network-speciality"
-      "3ware:environment-type" = "dev"
-      "3ware:service"          = "vpc"
+      "3ware:environment-type" = var.environment
+      "3ware:service"          = var.service
       "3ware:tofu"             = true
     }
   }
@@ -25,7 +25,7 @@ terraform {
     hostname     = "app.terraform.io"
 
     workspaces {
-      name = "aws-net-spec-vpc"
+      name = "aws-net-spec-${var.service}-${var.environment}"
     }
   }
 }
