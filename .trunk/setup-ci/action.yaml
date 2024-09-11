@@ -31,5 +31,5 @@ runs:
         TF_DIRS: ${{ steps.tf-dir.outputs.all_changed_files }}
       run: |
         for dir in ${TF_DIRS}; do
-          cd $dir && tofu init --backend=false
+          cd $GITHUB_WORKSPACE/$dir && tofu init --backend=false
         done
