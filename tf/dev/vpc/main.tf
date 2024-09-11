@@ -31,6 +31,7 @@ module "vpc" {
   enable_dns_hostnames = true
   enable_dns_support   = true
 }
+
 resource "aws_security_group_rule" "bastion_ingress" {
   description       = "Inbound traffic to bastion hosts"
   type              = "ingress"
