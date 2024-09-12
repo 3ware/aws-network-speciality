@@ -70,66 +70,48 @@ jobs:
           arg_lock: ${{ github.event_name == 'push' && 'true' || 'false' }}
 
       - name: Test idempotency
-        if: ${{ github.event_name == 'push' }}
         id: tf-plan-test
-        uses: devsectop/tf-via-pr@8ec105a049bb047a7ed5ee182c9548e2208dce86 # v11.1.0
-        with:
-          arg_chdir: ${{ inputs.tf-directory }}
-          arg_command: plan
-          #arg_detailed_exitcode: not if needed or what to set here
-          arg_lock: false
+        if: ${{ github.event_name == 'push' }}
+        env:
+          TF_IN_AUTOMATION: true
+        run: |
+          tofu -chdir=$GITHUB_WORKSPACE/${{ inputs.tf-directory }} plan -concise -compact-warnings -detailed-exitcode
+
+      - name: Test outcome
+        if: ${{ steps.tf-plan-test.outputs.exitcode != 0 }}
+        run: |
+          echo "### :heavy_exclamation_mark: OpenTofu plan produced a diff" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo ${{ steps.tf-plan-test.outputs.stdout }} >> $GITHUB_STEP_SUMMARY
+
+      - name: Test outcome
+        if: ${{ steps.tf-plan-test.outputs.exitcode == 0 }}
+        run: |
+          echo "### :white_check_mark: OpenTofu Plan ${{ steps.tf-plan-test.outcome }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo ${{ steps.tf-plan-test.outputs.stdout }} >> $GITHUB_STEP_SUMMARY
 
       - name: Destroy
-        if: ${{ github.event_name == 'push' && inputs.destroy == 'true' }}
         id: tf-destroy
-        uses: devsectop/tf-via-pr@8ec105a049bb047a7ed5ee182c9548e2208dce86 # v11.1.0
-        with:
-          arg_chdir: ${{ inputs.tf-directory }}
-          arg_command: apply
-          arg_destroy: true
-          arg_lock: true
+        if: ${{ github.event_name == 'push' && inputs.destroy == 'true' }}
+        env:
+          TF_IN_AUTOMATION: true
+        run: |
+          tofu -chdir=$GITHUB_WORKSPACE/${{ inputs.tf-directory }} destroy -concise -compact-warnings -detailed-exitcode -lock=true tfplan
 
-      # - name: Test idempotency
-      #   id: tf-plan-test
-      #   if: ${{ github.event_name == 'push' }}
-      #   env:
-      #     TF_IN_AUTOMATION: true
-      #   run: |
-      #     cd $GITHUB_WORKSPACE/${{ inputs.tf-directory }} && tofu plan -concise -compact-warnings -detailed-exitcode
+      - name: Destroy summary
+        if: ${{ steps.tf-destroy.outputs.exitcode != 0 }}
+        run: |
+          echo "### :heavy_exclamation_mark: OpenTofu plan produced a diff" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo ${{ steps.tf-plan-test.outputs.stdout }} >> $GITHUB_STEP_SUMMARY
 
-      # - name: Test outcome
-      #   if: ${{ steps.tf-plan-test.outputs.exitcode != 0 }}
-      #   run: |
-      #     echo "### :heavy_exclamation_mark: OpenTofu plan produced a diff" >> $GITHUB_STEP_SUMMARY
-      #     echo "" >> $GITHUB_STEP_SUMMARY
-      #     echo ${{ steps.tf-plan-test.outputs.stdout }} >> $GITHUB_STEP_SUMMARY
-
-      # - name: Test outcome
-      #   if: ${{ steps.tf-plan-test.outputs.exitcode == 0 }}
-      #   run: |
-      #     echo "### :white_check_mark: OpenTofu Plan ${{ steps.tf-plan-test.outcome }}" >> $GITHUB_STEP_SUMMARY
-      #     echo "" >> $GITHUB_STEP_SUMMARY
-      #     echo ${{ steps.tf-plan-test.outputs.stdout }} >> $GITHUB_STEP_SUMMARY
-
-      # - name: Destroy
-      #   id: tf-destroy
-      #   if: ${{ github.event_name == 'push' && inputs.destroy == 'true' }}
-      #   run: |
-      #     cd $GITHUB_WORKSPACE/${{ inputs.tf-directory }} && tofu destroy -concise -compact-warnings -detailed-exitcode
-
-      # - name: Destroy outcome
-      #   if: ${{ steps.tf-destroy.outputs.exitcode != 0 }}
-      #   run: |
-      #     echo "### :heavy_exclamation_mark: OpenTofu plan produced a diff" >> $GITHUB_STEP_SUMMARY
-      #     echo "" >> $GITHUB_STEP_SUMMARY
-      #     echo ${{ steps.tf-plan-test.outputs.stdout }} >> $GITHUB_STEP_SUMMARY
-
-      # - name: Destroy outcome
-      #   if: ${{ steps.tf-destroy.outputs.exitcode == 0 }}
-      #   run: |
-      #     echo "### :white_check_mark: OpenTofu Plan ${{ steps.tf-plan-test.outcome }}" >> $GITHUB_STEP_SUMMARY
-      #     echo "" >> $GITHUB_STEP_SUMMARY
-      #     echo ${{ steps.tf-plan-test.outputs.stdout }} >> $GITHUB_STEP_SUMMARY
+      - name: Destroy summary
+        if: ${{ steps.tf-destroy.outputs.exitcode == 0 }}
+        run: |
+          echo "### :white_check_mark: OpenTofu Plan ${{ steps.tf-plan-test.outcome }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo ${{ steps.tf-plan-test.outputs.stdout }} >> $GITHUB_STEP_SUMMARY
 
   #! Only works with terraform
   #TODO: Fork and update index.ts to use tofu instead
