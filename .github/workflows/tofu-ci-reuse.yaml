@@ -63,11 +63,13 @@ jobs:
 
       - name: Provision TF
         id: tf-plan
-        uses: devsectop/tf-via-pr@8ec105a049bb047a7ed5ee182c9548e2208dce86 # v11.1.0
+        uses: devsectop/tf-via-pr@86ff2b5756fb1c483c7c3ecc86f7c320c97a7302 # v11.4.1
         with:
           arg_chdir: ${{ inputs.tf-directory }}
           arg_command: ${{ github.event_name == 'push' && 'apply' || 'plan' }}
           arg_lock: ${{ github.event_name == 'push' && 'true' || 'false' }}
+          arg_compact_warnings: true
+          arg_detailed_exitcode: true
 
       - name: Test idempotency
         id: tf-plan-test
