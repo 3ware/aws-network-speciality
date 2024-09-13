@@ -24,7 +24,7 @@ jobs:
   plan-and-apply-dev:
     name: Open Tofu CI Development
     needs: [find-terraform-dir]
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
 
     permissions:
       actions: read # Required to download repository artifact.
@@ -79,6 +79,7 @@ jobs:
 
       - name: Exit if idempotent
         if: github.event_name == 'push' && steps.idempotency.outputs.exitcode != 0
+        shell: bash
         run: exit ${{ steps.idempotency.outputs.exitcode }}
 
       - name: Clean up resources
