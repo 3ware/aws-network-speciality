@@ -2,16 +2,11 @@ name: OpenTofu CI
 
 on:
   pull_request:
-    types: [opened, synchronize]
     branches: [main]
-    paths:
-      - tf/**/*.tf
-      - tf/**/*.tfvars
+    paths: tf/**/*.{tf,tfvars}
   push:
     branches: [main]
-    paths:
-      - tf/**/*.tf
-      - tf/**/*.tfvars
+    paths: tf/**/*.{tf,tfvars}
 
 # Disable permissions for all available scopes
 permissions: {}
@@ -42,6 +37,9 @@ jobs:
       matrix:
         terraform-dir: ${{ fromJSON(needs.find-terraform-dir.outputs.terraform-dir) }}
 
+    env:
+      TF_TOKEN_APP_TERRAFORM_IO: ${{ secrets.TF_TOKEN_APP_TERRAFORM_IO }}
+
     # Set environment only
     environment: ${{ github.event_name == 'push' && 'development' || '' }}
 
@@ -62,15 +60,28 @@ jobs:
           tofu_version: 1.8.2
           tofu_wrapper: true
 
-      - name: Provision TF
-        id: tf
-        env:
-          TF_TOKEN_APP_TERRAFORM_IO: ${{ secrets.TF_TOKEN_APP_TERRAFORM_IO }}
+      - name: Provision infrastructure
         uses: devsectop/tf-via-pr@86ff2b5756fb1c483c7c3ecc86f7c320c97a7302 # v11.4.1
         with:
           arg_chdir: ${{ matrix.terraform-dir }}
           arg_command: ${{ github.event_name == 'push' && 'apply' || 'plan' }}
           arg_lock: ${{ github.event_name == 'push' && 'true' || 'false' }}
-          arg_destroy: false # or true
-          arg_compact_warnings: true
+
+      - name: Check idempotency
+        id: idempotency
+        if: github.event_name == 'push'
+        uses: devsectop/tf-via-pr@86ff2b5756fb1c483c7c3ecc86f7c320c97a7302 # v11.4.1
+        with:
+          arg_chdir: ${{ matrix.terraform-dir }}
+          arg_command: plan
+          arg_lock: false
           arg_detailed_exitcode: true
+
+      - name: Clean up resources
+        if: github.event_name == 'push' && steps.idempotency.outputs.exitcode == 0
+        uses: devsectop/tf-via-pr@86ff2b5756fb1c483c7c3ecc86f7c320c97a7302 # v11.4.1
+        with:
+          arg_chdir: ${{ matrix.terraform-dir }}
+          arg_command: destroy
+          arg_lock: true
+          arg_auto_approve: true
