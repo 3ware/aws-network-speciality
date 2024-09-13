@@ -77,8 +77,12 @@ jobs:
           arg_lock: false
           arg_detailed_exitcode: true
 
+      - name: Exit if idempotent
+        if: github.event_name == 'push' && steps.idempotency.outputs.exitcode != 0
+        run: exit ${{ steps.idempotency.outputs.exitcode }}
+
       - name: Clean up resources
-        if: github.event_name == 'push' && steps.idempotency.outputs.exitcode == 0
+        if: github.event_name == 'push'
         uses: devsectop/tf-via-pr@86ff2b5756fb1c483c7c3ecc86f7c320c97a7302 # v11.4.1
         with:
           arg_chdir: ${{ matrix.terraform-dir }}
