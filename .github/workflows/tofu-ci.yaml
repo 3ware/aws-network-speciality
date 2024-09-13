@@ -8,7 +8,7 @@ on:
     branches: [main]
     paths: tf/**/*.{tf,tfvars}
 
-# Disable permissions for all available scopes
+# Disable permissions for all available scopes.
 permissions: {}
 
 concurrency:
@@ -40,11 +40,11 @@ jobs:
     env:
       TF_TOKEN_APP_TERRAFORM_IO: ${{ secrets.TF_TOKEN_APP_TERRAFORM_IO }}
 
-    # Set environment only
+    # Set environment for push events only.
     environment: ${{ github.event_name == 'push' && 'development' || '' }}
 
     steps:
-      - name: Checkout
+      - name: Checkout repository
         uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
 
       - name: Configure AWS credentials via OIDC
