@@ -37,6 +37,8 @@ lint:
       environment:
         - name: TFLINT_CONFIG_FILE
           value: ${workspace}/.trunk/configs/.tflint.hcl
+        - name: TFLINT_PLUGIN_DIR
+          value: ${workspace}/.trunk/plugins/
     - name: tofu
       environment:
         - name: XDG_CONFIG_HOME
