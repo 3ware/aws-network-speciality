@@ -147,7 +147,7 @@ resource "aws_instance" "a4l_bastion" {
 # trunk-ignore(trivy)
 # trunk-ignore(checkov)
 resource "aws_instance" "a4l_internal" {
-  ami                    = "ami-033b95fb8079dc481"
+  ami                    = "ami-033b95fb8079dc481-blah"
   instance_type          = "t2.micro"
   subnet_id              = module.vpc.private_subnets[1]
   vpc_security_group_ids = [aws_security_group.internal.id]
