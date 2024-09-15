@@ -19,18 +19,42 @@ runs:
       run: |
         echo ${{ steps.tf-dir.outputs.all_changed_files }}
 
-    # Install OpenTofu
+    # AWS Credentials required for tflint deep check
+    - name: Configure AWS credentials via OIDC
+      uses: aws-actions/configure-aws-credentials@e3dd6a429d7300a6a4c196c26e071d42e0343502 # v4.0.2
+      with:
+        #? How would this work in a multi region setup
+        aws-region: us-east-1
+        mask-aws-account-id: true
+        role-to-assume: ${{ secrets.AWS_DEV_OIDC_ROLE_ARN }}
+        role-session-name: tflint-trunk-check
+
+    - uses: actions/cache@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9 # v4.0.2
+      name: Cache plugin dir
+      with:
+        path: $GITHUB_WORKSPACE/.trunk/plugins/
+        key: ${{ runner.os }}-3ware-ans-tflint-${{ hashFiles('$GITHUB_WORKSPACE/.trunk/configs/.tflint.hcl') }}
+
+    # Install TFLint; required to download plugins
+    - uses: terraform-linters/setup-tflint@15ef44638cb215296e7ba9e7a41f20b5b06f4784 # v4.0.0
+      name: Setup TFLint
+      with:
+        tflint_version: v0.53.0
+
+    # Install OpenTofu; required to initialise working directory
     - name: Setup OpenTofu
       if: ${{ steps.tf-dir.outputs.all_changed_files != '' }}
       uses: opentofu/setup-opentofu@ae80d4ecaab946d8f5ff18397fbf6d0686c6d46a # v1.0.3
 
     # Initialise OpenTofu in the directory where terraform file have changed.
-    - name: Initialise OpenTofu
+    # TFLint initialisation required to download plugins
+    - name: Initialise OpenTofu and TFLint
       if: ${{ steps.tf-dir.outputs.all_changed_files != '' }}
       shell: bash
       env:
         TF_DIRS: ${{ steps.tf-dir.outputs.all_changed_files }}
       run: |
         for dir in ${TF_DIRS}; do
-          tofu -chdir=$GITHUB_WORKSPACE/$dir init --backend=false
+          tofu -chdir=$GITHUB_WORKSPACE/$dir init --backend=false && \
+          tflint -chdir=$GITHUB_WORKSPACE/$dir --init --config=$GITHUB_WORKSPACE/.trunk/configs/.tflint.hcl
         done
