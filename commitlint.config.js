@@ -18,6 +18,7 @@ module.exports = {
         "org",
         "pr-check",
         "release",
+        "renbot",
         "scorecard",
         "tofu",
         "tofu-ci",
