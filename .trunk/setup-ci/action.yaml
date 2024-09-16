@@ -36,12 +36,12 @@ runs:
     #     role-to-assume: ${{ inputs.aws_role }}
     #     role-session-name: tflint-trunk-check
 
-    # - uses: actions/cache@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9 # v4.0.2
-    #   if: ${{ steps.tf-dir.outputs.all_changed_files != '' }}
-    #   name: Cache plugin dir
-    #   with:
-    #     path: $GITHUB_WORKSPACE/.trunk/plugins/
-    #     key: ${{ runner.os }}-3ware-ans-tflint-${{ hashFiles('$GITHUB_WORKSPACE/.trunk/configs/.tflint.hcl') }}
+    - uses: actions/cache@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9 # v4.0.2
+      if: ${{ steps.tf-dir.outputs.all_changed_files != '' }}
+      name: Cache plugin dir
+      with:
+        path: $GITHUB_WORKSPACE/.trunk/plugins/
+        key: ${{ runner.os }}-3ware-ans-tflint-${{ hashFiles('$GITHUB_WORKSPACE/.trunk/configs/.tflint.hcl') }}
 
     # Install TFLint; required to download plugins
     - uses: terraform-linters/setup-tflint@15ef44638cb215296e7ba9e7a41f20b5b06f4784 # v4.0.0
