@@ -22,6 +22,8 @@ runs:
     # AWS Credentials required for tflint deep check
     - name: Configure AWS credentials via OIDC
       if: ${{ steps.tf-dir.outputs.all_changed_files != '' }}
+      permissions:
+        id-token: write
       uses: aws-actions/configure-aws-credentials@e3dd6a429d7300a6a4c196c26e071d42e0343502 # v4.0.2
       with:
         aws-region: us-east-1
