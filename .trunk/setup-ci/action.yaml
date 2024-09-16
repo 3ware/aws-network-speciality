@@ -19,24 +19,29 @@ runs:
       run: |
         echo ${{ steps.tf-dir.outputs.all_changed_files }}
 
-    # AWS Credentials required for tflint deep check
-    - name: Configure AWS credentials via OIDC
-      uses: aws-actions/configure-aws-credentials@e3dd6a429d7300a6a4c196c26e071d42e0343502 # v4.0.2
-      with:
-        #? How would this work in a multi region setup
-        aws-region: us-east-1
-        mask-aws-account-id: true
-        role-to-assume: ${{ secrets.AWS_DEV_OIDC_ROLE_ARN }}
-        role-session-name: tflint-trunk-check
+    # # AWS Credentials required for tflint deep check
+    # - name: Configure AWS credentials via OIDC
+    #   if: ${{ steps.tf-dir.outputs.all_changed_files != '' }}
+    #   uses: aws-actions/configure-aws-credentials@e3dd6a429d7300a6a4c196c26e071d42e0343502 # v4.0.2
+    #   with:
+    #     #? How would this work in a multi region setup
+    #     aws-region: us-east-1
+    #     mask-aws-account-id: true
+    #     #! Secrets context not available in composite actions
+    #     # TODO: This needs to be an input, not sure trunk GitHub App will support this
+    #     role-to-assume: ${{ inputs.aws_role }}
+    #     role-session-name: tflint-trunk-check
 
-    - uses: actions/cache@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9 # v4.0.2
-      name: Cache plugin dir
-      with:
-        path: $GITHUB_WORKSPACE/.trunk/plugins/
-        key: ${{ runner.os }}-3ware-ans-tflint-${{ hashFiles('$GITHUB_WORKSPACE/.trunk/configs/.tflint.hcl') }}
+    # - uses: actions/cache@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9 # v4.0.2
+    #   if: ${{ steps.tf-dir.outputs.all_changed_files != '' }}
+    #   name: Cache plugin dir
+    #   with:
+    #     path: $GITHUB_WORKSPACE/.trunk/plugins/
+    #     key: ${{ runner.os }}-3ware-ans-tflint-${{ hashFiles('$GITHUB_WORKSPACE/.trunk/configs/.tflint.hcl') }}
 
     # Install TFLint; required to download plugins
     - uses: terraform-linters/setup-tflint@15ef44638cb215296e7ba9e7a41f20b5b06f4784 # v4.0.0
+      if: ${{ steps.tf-dir.outputs.all_changed_files != '' }}
       name: Setup TFLint
       with:
         tflint_version: v0.53.0
