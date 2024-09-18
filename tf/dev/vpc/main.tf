@@ -24,7 +24,7 @@ module "vpc" {
 
   create_igw             = true
   create_egress_only_igw = false
-  enable_nat_gateway     = true
+  enable_nat_gateway     = false
   single_nat_gateway     = false
   one_nat_gateway_per_az = true
 
@@ -132,7 +132,7 @@ resource "aws_key_pair" "a4l" {
 # trunk-ignore(trivy)
 # trunk-ignore(checkov)
 resource "aws_instance" "a4l_bastion" {
-  ami                         = "ami-033b95fb8079dc48"
+  ami                         = "ami-033b95fb8079dc481"
   instance_type               = "t2.micro"
   subnet_id                   = module.vpc.public_subnets[0]
   associate_public_ip_address = true
