@@ -4,13 +4,13 @@ on:
   pull_request:
     branches: [main]
     paths:
-      - tf/dev/*.tf
-      - tf/dev/*.tfvars
+      - tf/dev/**/*.tf
+      - tf/dev/**/*.tfvars
   push:
     branches: [main]
     paths:
-      - tf/dev/*.tf
-      - tf/dev/*.tfvars
+      - tf/dev/**/*.tf
+      - tf/dev/**/*.tfvars
 
 # Disable permissions for all available scopes.
 permissions: {}
