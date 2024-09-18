@@ -23,11 +23,14 @@ jobs:
   find-terraform:
     outputs:
       tf-dir-json: ${{ steps.tf-dir-json.outputs.all_changed_files }}
+    name: Trunk Check TF
+    runs-on: ubuntu-latest
     permissions:
       contents: read
-    name: Trunk Check TF
-    runs-on: ubuntu-24.04
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
+
       - name: Find TF files
         id: tf-dir-json
         uses: tj-actions/changed-files@4918e1183080b35a085c91c8abc9e6adc4de61a1 # v42.1.0
@@ -41,7 +44,7 @@ jobs:
   trunk-check-tf:
     name: Trunk Check TF
     needs: [find-terraform]
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
     permissions:
       checks: write
       contents: read
@@ -55,6 +58,7 @@ jobs:
         uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
 
         # AWS Credentials required for tflint deep check
+        #TODO: Try running with an ACCESS key with act
       - name: Configure AWS credentials via OIDC
         uses: aws-actions/configure-aws-credentials@e3dd6a429d7300a6a4c196c26e071d42e0343502 # v4.0.2
         with:
@@ -98,7 +102,7 @@ jobs:
   plan-and-apply-dev:
     name: Open Tofu CI Development
     needs: [find-terraform, trunk-check-tf]
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
     permissions:
       actions: read # Required to download repository artifact.
       checks: write # Required to add status summary.
