@@ -98,8 +98,6 @@ jobs:
       # Run Trunk Check
       - name: Trunk Check
         uses: trunk-io/trunk-action@a19f8a0d6676d8ef1e60bda132f3fbab23cc2aa5
-        with:
-          arguments: --show-existing
 
   plan-and-apply-dev:
     name: Open Tofu CI Development
