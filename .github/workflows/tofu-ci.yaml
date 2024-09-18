@@ -5,12 +5,12 @@ on:
     branches: [main]
     paths:
       - tf/dev/*.tf
-      - tf/dev/.tfvars
+      - tf/dev/*.tfvars
   push:
     branches: [main]
     paths:
       - tf/dev/*.tf
-      - tf/dev/.tfvars
+      - tf/dev/*.tfvars
 
 # Disable permissions for all available scopes.
 permissions: {}
