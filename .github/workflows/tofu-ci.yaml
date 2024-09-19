@@ -72,8 +72,8 @@ jobs:
       - name: Cache TFLint plugin directory
         uses: actions/cache@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9 # v4.0.2
         with:
-          path: $GITHUB_WORKSPACE/.trunk/plugins/
-          key: ${{ runner.os }}-3ware-ans-tflint-${{ hashFiles('$GITHUB_WORKSPACE/.trunk/configs/.tflint.hcl') }}
+          path: .trunk/plugins/
+          key: ${{ runner.os }}-3ware-ans-tflint-${{ hashFiles('.trunk/configs/.tflint.hcl') }}
 
       # Install OpenTofu; required to initialise working directory
       - name: Setup OpenTofu
