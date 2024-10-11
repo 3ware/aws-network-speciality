@@ -144,14 +144,14 @@ jobs:
           tofu_version: 1.8.2
           tofu_wrapper: true
 
-      # - name: Provision infrastructure
-      #   uses: devsectop/tf-via-pr@1b1050ccc9a467c3d7ee1f454d58f19baa4b71a5 # v11.4.5
-      #   with:
-      #     arg_chdir: ${{ matrix.terraform-dir }}
-      #     arg_command: plan
-      #     # arg_command: ${{ github.event_name == 'push' && 'apply' || 'plan' }}
-      #     arg_lock: false
-      #     # arg_lock: ${{ github.event_name == 'push' && 'true' || 'false' }}
+      - name: Provision infrastructure
+        uses: devsectop/tf-via-pr@1b1050ccc9a467c3d7ee1f454d58f19baa4b71a5 # v11.4.5
+        with:
+          arg_chdir: ${{ matrix.terraform-dir }}
+          arg_command: plan
+          # arg_command: ${{ github.event_name == 'push' && 'apply' || 'plan' }}
+          arg_lock: false
+          # arg_lock: ${{ github.event_name == 'push' && 'true' || 'false' }}
 
       - name: Provision infrastructure
         uses: devsectop/tf-via-pr@1b1050ccc9a467c3d7ee1f454d58f19baa4b71a5 # v11.4.5
