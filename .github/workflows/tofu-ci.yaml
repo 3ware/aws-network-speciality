@@ -145,7 +145,7 @@ jobs:
           tofu_wrapper: true
 
       - name: Plan
-        uses: devsectop/tf-via-pr@1b1050ccc9a467c3d7ee1f454d58f19baa4b71a5 # v11.4.5
+        uses: devsectop/tf-via-pr@cc83c7bae8216e747bb8c074524665b2416822f5 # v11.4.6
         with:
           arg_chdir: ${{ matrix.terraform-dir }}
           arg_command: plan
@@ -154,10 +154,11 @@ jobs:
           # arg_lock: ${{ github.event_name == 'push' && 'true' || 'false' }}
 
       - name: Apply
-        uses: devsectop/tf-via-pr@1b1050ccc9a467c3d7ee1f454d58f19baa4b71a5 # v11.4.5
+        uses: devsectop/tf-via-pr@cc83c7bae8216e747bb8c074524665b2416822f5 # v11.4.6
         with:
           arg_chdir: ${{ matrix.terraform-dir }}
           arg_command: apply
+          arg_auto_approve: true
           # arg_command: ${{ github.event_name == 'push' && 'apply' || 'plan' }}
           arg_lock: true
           # arg_lock: ${{ github.event_name == 'push' && 'true' || 'false' }}
@@ -166,7 +167,7 @@ jobs:
       - name: Check idempotency
         id: idempotency
         # if: github.event_name == 'push'
-        uses: devsectop/tf-via-pr@1b1050ccc9a467c3d7ee1f454d58f19baa4b71a5 # v11.4.5
+        uses: devsectop/tf-via-pr@cc83c7bae8216e747bb8c074524665b2416822f5 # v11.4.6
         with:
           arg_chdir: ${{ matrix.terraform-dir }}
           arg_command: plan
@@ -184,11 +185,12 @@ jobs:
       #   run: exit ${{ steps.idempotency.outputs.exitcode }}
 
       - name: Destroy
-        uses: devsectop/tf-via-pr@1b1050ccc9a467c3d7ee1f454d58f19baa4b71a5 # v11.4.5
+        uses: devsectop/tf-via-pr@cc83c7bae8216e747bb8c074524665b2416822f5 # v11.4.6
         with:
           arg_chdir: ${{ matrix.terraform-dir }}
           arg_command: apply
           arg_destroy: true
+          arg_auto_approve: true
           arg_lock: true
 
       # TODO: Terraform docs
