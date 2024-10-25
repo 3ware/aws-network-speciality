@@ -2,6 +2,8 @@ name: Trigger on pull_request (plan) and merge_group (apply) in matrix strategy.
 
 on:
   pull_request:
+    # obtained from View context attributes script
+    # types: [opened, synchronize]
     paths:
       - "**/*.tf"
       - "**/*.tfvars"
@@ -25,6 +27,8 @@ jobs:
       max-parallel: 1
       matrix:
         environment: [development, production]
+    env:
+      TF_TOKEN_APP_TERRAFORM_IO: ${{ secrets.TF_TOKEN_APP_TERRAFORM_IO }}
 
     # environment: ${{ github.event_name == 'merge_group' && matrix.deployment || '' }}
     # Changing this because the secrets are set at environment level, and the OIDC role only allows access from the environment
@@ -44,7 +48,6 @@ jobs:
         with:
           aws-region: us-east-1
           mask-aws-account-id: true
-          #TODO: Should be 'secrets.[format...]'?
           role-to-assume: ${{ secrets[format('GHA_3WARE_OIDC_{0}', matrix.environment)] }}
           role-session-name: ans-vpc-${{ matrix.environment }}
 
