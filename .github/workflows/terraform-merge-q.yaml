@@ -1,4 +1,4 @@
-name: Trigger on pull_request (plan) and merge_group (apply) events with OpenTofu in matrix strategy.
+name: Trigger on pull_request (plan) and merge_group (apply) in matrix strategy.
 
 on:
   pull_request:
@@ -44,7 +44,7 @@ jobs:
           aws-region: us-east-1
           mask-aws-account-id: true
           #TODO: Should be 'secrets.[format...]'?
-          role-to-assume: ${{ secrets[format('threeware_gha_oidc_{0}', matrix.environment)] }}
+          role-to-assume: ${{ secrets[format('GHA_3WARE_OIDC_{0}', matrix.environment)] }}
           role-session-name: ans-vpc-${{ matrix.environment }}
 
       - name: Provision TF
