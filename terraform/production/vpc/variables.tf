@@ -1,18 +1,14 @@
 variable "environment" {
-  description = "The AWS environment to deploy resources to"
+  description = "(Required) The AWS environment to deploy resources to"
   type        = string
-  default     = "dev"
+  default     = "production"
   nullable    = false
-
-  validation {
-    condition     = contains(["production"], var.environment)
-    error_message = "Invalid environment specified. Valid values are: \"production\""
-  }
 }
 
 variable "service" {
-  description = "The AWS service being deployed"
+  description = "(Required) The AWS service being deployed"
   type        = string
+  default     = "vpc"
   nullable    = false
 }
 
