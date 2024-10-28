@@ -59,4 +59,3 @@ jobs:
           arg-lock: ${{ github.event_name == 'merge_group' }}
           working-directory: terraform/${{ matrix.environment }}/vpc
           plan-encrypt: ${{ secrets.PGP_SECRET_SIGNING_PASSPHRASE }}
-          plan-parity: true
