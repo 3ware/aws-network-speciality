@@ -162,7 +162,7 @@ jobs:
             #### :white_check_mark: Terraform Validation ${{ steps.tf-validate.outcome }}
             #### :white_check_mark: TFLint ${{ steps.tf-validate.outcome }}
 
-  plan-and-apply:
+  deploy:
     name: Terraform Deploy
     runs-on: ubuntu-latest
     needs: [test-terraform]
@@ -183,7 +183,7 @@ jobs:
       fail-fast: true
       max-parallel: 1
       matrix:
-        environment: ${{ fromJson(vars.ENVIRONMENTS) }}
+        environment: [development, production]
     env:
       TF_TOKEN_APP_TERRAFORM_IO: ${{ secrets.TF_TOKEN_APP_TERRAFORM_IO }}
     environment: ${{ matrix.environment }}
