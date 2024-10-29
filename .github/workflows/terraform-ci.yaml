@@ -81,6 +81,8 @@ jobs:
           header: test
           hide_and_recreate: true
           message: |
+            #### ${{ matrix.environment }}
+
             #### :x: Terraform Format and Style ${{ steps.tf-fmt.outcome }}
 
             ${{ steps.tf-fmt.outputs.stdout }}
@@ -126,6 +128,8 @@ jobs:
           header: test
           hide_and_recreate: true
           message: |
+            #### ${{ matrix.environment }}
+
             #### :x: TFLint failure
 
             ```
@@ -152,6 +156,8 @@ jobs:
           header: test
           hide_and_recreate: true
           message: |
+            #### ${{ matrix.environment }}
+
             #### :white_check_mark: Terraform Format and Style ${{ steps.tf-fmt.outcome }}
             #### :white_check_mark: Terraform Validation ${{ steps.tf-validate.outcome }}
             #### :white_check_mark: TFLint ${{ steps.tf-validate.outcome }}
