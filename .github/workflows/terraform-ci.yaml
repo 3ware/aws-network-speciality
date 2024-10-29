@@ -27,9 +27,11 @@ jobs:
     name: Test Terraform
     runs-on: ubuntu-latest
     permissions:
-      checks: write
-      contents: read
-      id-token: write
+      actions: read # Required to identify workflow run.
+      checks: write # Required to add status summary.
+      contents: read # Required to checkout repository.
+      id-token: write # Require for OIDC.
+      pull-requests: write # Required to add comment and label.
     strategy:
       matrix:
         environment: ${{ fromJson(vars.ENVIRONMENTS) }}
