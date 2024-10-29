@@ -58,6 +58,7 @@ jobs:
         with:
           # command: Leave blank to init and validate
           working-directory: terraform/${{ matrix.environment }}/vpc
+          arg-backend: false
 
       # Install TFLint; required to download plugins
       - name: Install TFLint
