@@ -117,7 +117,7 @@ jobs:
       - name: Run TFLint
         id: tflint
         run: |
-          tflint --config=$GITHUB_WORKSPACE/.trunk/configs/.tflint_ci.hcl --format compact
+          tflint -chdir=terraform/${{ matrix.environment }}/vpc --config=$GITHUB_WORKSPACE/.trunk/configs/.tflint_ci.hcl --format compact
         continue-on-error: true
 
       # Add PR comment when TFLint detects a violation
