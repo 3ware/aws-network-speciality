@@ -55,14 +55,49 @@ jobs:
           path: .trunk/plugins/
           key: ${{ runner.os }}-${{ github.repository }}-tflint-${{ hashFiles('.trunk/configs/.tflint_ci.hcl') }}
 
-      - name: Validate TF
-        uses: devsectop/tf-via-pr@f1acaae1d94826457fa57bc65f1df318fd81b3bc # v12.0.0
+      # Run terraform format
+      - name: Terraform fmt
+        id: tf-fmt
+        run: terraform -chdir=terraform/${{ matrix.environment }}/vpc fmt -check
+        continue-on-error: true
+
+      # Initialise terraform in the directory where terraform file have changed.
+      - name: Initialise terraform
+        id: tf-init
+        run: |
+          terraform -chdir=terraform/${{ matrix.environment }}/vpc init -backend=false
+
+      # Run terraform validate
+      - name: Terraform validate
+        id: tf-validate
+        run: terraform -chdir=terraform/${{ matrix.environment }}/vpc validate -no-color
+        continue-on-error: true
+
+      # Add PR comment with formatting and validation errors
+      - name: Add PR comment on terraform failure
+        if: ${{ steps.tf-fmt.outputs.exitcode != 0 || steps.tf-validate.outputs.exitcode != 0 }}
+        uses: marocchino/sticky-pull-request-comment@331f8f5b4215f0445d3c07b4967662a32a2d3e31 # v2.9.0
         with:
-          # command: Leave blank to init and validate
-          working-directory: terraform/${{ matrix.environment }}/vpc
-          format: true
-          validate: true
-          arg-backend: false
+          header: test
+          hide_and_recreate: true
+          message: |
+            #### :x: Terraform Format and Style ${{ steps.tf-fmt.outcome }}
+
+            ${{ steps.tf-fmt.outputs.stdout }}
+
+            #### :x: Terraform Validation ${{ steps.tf-validate.outcome }}
+
+            ```
+            ${{ steps.tf-validate.outputs.stderr }}
+            ```
+
+            Resolve these issues and commit your changes to trigger another deployment.
+
+      # Exit this workflow if fmt or validate fail
+      - name: Terraform error
+        if: ${{ steps.tf-fmt.outputs.exitcode != 0 || steps.tf-validate.outputs.exitcode != 0 }}
+        run: |
+          exit 1
 
       # Install TFLint; required to download plugins
       - name: Install TFLint
@@ -88,11 +123,10 @@ jobs:
         if: ${{ steps.tflint.outputs.exitcode != 0 }}
         uses: marocchino/sticky-pull-request-comment@331f8f5b4215f0445d3c07b4967662a32a2d3e31 # v2.9.0
         with:
-          header: TLint error
+          header: test
           hide_and_recreate: true
-          hide_classify: RESOLVED
           message: |
-            #### TFLint failure :x:
+            #### :x: TFLint failure
 
             ```
             ${{ steps.tflint.outputs.stdout }}
@@ -111,6 +145,16 @@ jobs:
         uses: trunk-io/trunk-action@2eaee169140ec559bd556208f9f99cdfdf468da8 # v1.1.17
         with:
           arguments: --filter checkov,trivy
+
+      - name: Update PR comment for Test success
+        uses: marocchino/sticky-pull-request-comment@331f8f5b4215f0445d3c07b4967662a32a2d3e31 # v2.9.0
+        with:
+          header: test
+          hide_and_recreate: true
+          message: |
+            #### :white_check_mark: Terraform Format and Style ${{ steps.tf-fmt.outcome }}
+            #### :white_check_mark: Terraform Validation ${{ steps.tf-validate.outcome }}
+            #### :white_check_mark: TFLint ${{ steps.tf-validate.outcome }}
 
   plan-and-apply:
     name: Terraform Deploy
@@ -147,7 +191,7 @@ jobs:
           aws-region: us-east-1
           mask-aws-account-id: true
           role-to-assume: ${{ secrets[format('GHA_3WARE_OIDC_{0}', matrix.environment)] }}
-          role-session-name: ans-vpc-${{ matrix.environment }}
+          role-session-name: aws-net-sec-${{ matrix.environment }}-terraform-deploy
 
       - name: Provision TF
         uses: devsectop/tf-via-pr@f1acaae1d94826457fa57bc65f1df318fd81b3bc # v12.0.0
