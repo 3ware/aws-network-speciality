@@ -183,7 +183,7 @@ jobs:
       fail-fast: true
       max-parallel: 1
       matrix:
-        environment: [development, production]
+        environment: ${{ fromJson(vars.ENVIRONMENTS) }}
     env:
       TF_TOKEN_APP_TERRAFORM_IO: ${{ secrets.TF_TOKEN_APP_TERRAFORM_IO }}
     environment: ${{ matrix.environment }}
