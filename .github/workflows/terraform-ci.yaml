@@ -3,10 +3,6 @@ name: Terraform CI
 on:
   pull_request:
     types: [opened, synchronize]
-    # paths:
-    #   - "**/*.tf"
-    #   - "**/*.tfvars"
-    #   - "**/*.tftpl"
     branches: [main]
   merge_group:
     types: [checks_requested]
@@ -35,6 +31,7 @@ jobs:
         with:
           fetch-depth: 0
           persist-credentials: false
+
       - name: Check changed directories
         id: directories
         uses: tj-actions/changed-files@c3a1bb2c992d77180ae65be6ae6c166cf40f857c # v45.0.3
