@@ -57,7 +57,8 @@ jobs:
       max-parallel: 1
       matrix:
         targets: ${{ fromJson(needs.targets.outputs.targets) }}
-    #environment: ${{ matrix.environment }}
+        environment: ${{ fromJson(vars.ENVIRONMENTS) }}
+    environment: ${{ matrix.environment }}
     env:
       TF_TOKEN_APP_TERRAFORM_IO: ${{ secrets.TF_TOKEN_APP_TERRAFORM_IO }}
     steps:
@@ -70,7 +71,7 @@ jobs:
         with:
           aws-region: us-east-1
           mask-aws-account-id: true
-          #role-to-assume: ${{ secrets[format('GHA_3WARE_OIDC_{0}', matrix.environment)] }}
+          role-to-assume: ${{ secrets[format('GHA_3WARE_OIDC_{0}', matrix.environment)] }}
           role-session-name: ${{ github.event_name == 'merge_group' && 'aws-net-sec-terraform-apply' || 'aws-net-sec-terraform-plan' }}
 
       - name: Cache TFLint plugin directory
