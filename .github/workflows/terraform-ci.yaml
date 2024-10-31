@@ -19,7 +19,7 @@ defaults:
 
 jobs:
   targets:
-    name: Targets
+    name: Terraform Targets
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -57,13 +57,21 @@ jobs:
       max-parallel: 1
       matrix:
         targets: ${{ fromJson(needs.targets.outputs.targets) }}
-        environment: ${{ fromJson(vars.ENVIRONMENTS) }}
-    environment: ${{ matrix.environment }}
+    environment: ${{ contains(matrix.targets, 'production') && 'production' || 'development' }}
     env:
       TF_TOKEN_APP_TERRAFORM_IO: ${{ secrets.TF_TOKEN_APP_TERRAFORM_IO }}
     steps:
       - name: Checkout repository
-        uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      # This is required because the 'environment' context does not exist, do cannot be referenced
+      # my the steps that need it
+      - name: Set deployment environment as an environment variable
+        run: |
+          echo "ENVIRONMENT=${{ contains(matrix.targets, 'production') && 'production' || 'development' }}" >> $GITHUB_ENV
 
       # AWS Credentials required for tflint deep check
       - name: Configure AWS credentials via OIDC
@@ -71,7 +79,7 @@ jobs:
         with:
           aws-region: us-east-1
           mask-aws-account-id: true
-          role-to-assume: ${{ secrets[format('GHA_3WARE_OIDC_{0}', matrix.environment)] }}
+          role-to-assume: ${{ secrets[format('GHA_3WARE_OIDC_{0}', env.ENVIRONMENT)] }}
           role-session-name: ${{ github.event_name == 'merge_group' && 'aws-net-sec-terraform-apply' || 'aws-net-sec-terraform-plan' }}
 
       - name: Cache TFLint plugin directory
