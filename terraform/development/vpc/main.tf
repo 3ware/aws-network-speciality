@@ -30,7 +30,6 @@ module "vpc" {
 
 locals {
   admin_port = 22
-  tflint     = "FAIL"
 }
 
 # Use for_each to create security group rules to avoid creation of duplicate rules
