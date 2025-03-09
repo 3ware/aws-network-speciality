@@ -41,7 +41,7 @@
         "https://registry.opentofu.org"
       ],
       "addLabels": [
-        "tf-update"
+        "tf:update"
       ],
       "commitMessagePrefix": "feat(iac): ",
       "commitMessageTopic": "{{depName}} provider",
