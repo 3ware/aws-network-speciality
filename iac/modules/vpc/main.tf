@@ -1,14 +1,25 @@
+data "aws_availability_zones" "available" {
+  state = "available"
+}
+
+locals {
+  # Use the first 3 available AZs
+  azs = slice(data.aws_availability_zones.available.names, 0, 3)
+}
+
 module "vpc" {
   source = "git::https://github.com/terraform-aws-modules/terraform-aws-vpc.git?ref=e226cc15a7b8f62fd0e108792fea66fa85bcb4b9"
 
   name = "a4l-vpc1-${var.aws_environment}"
-  azs  = ["us-east-1a", "us-east-1b", "us-east-1c"]
+  azs  = local.azs
 
-  cidr = "10.16.0.0/16"
-  #reserved = ["10.16.0.0/20", "10.16.64.0/20", "10.16.128.0/20"]
-  public_subnets   = ["10.16.48.0/20", "10.16.112.0/20", "10.16.176.0/20"]
-  private_subnets  = ["10.16.32.0/20", "10.16.96.0/20", "10.16.160.0/20"]
-  database_subnets = ["10.16.16.0/20", "10.16.80.0/20", "10.16.144.0/20"]
+  cidr = var.vpc_cidr_block
+  # reserved = ["10.16.0.0/20", "10.16.64.0/20", "10.16.128.0/20"]
+  # cidrsubnet(prefix, newbits, netnum)
+  # 10.16.0.0/16 + 8 bits = /24. k + 16 means first subnet is 10.16.16.0/24
+  public_subnets   = [for k, v in local.azs : cidrsubnet(var.vpc_cidr_block, 8, k)]
+  private_subnets  = [for k, v in local.azs : cidrsubnet(var.vpc_cidr_block, 8, k + 16)]
+  database_subnets = [for k, v in local.azs : cidrsubnet(var.vpc_cidr_block, 8, k + 32)]
 
   enable_ipv6                                     = false
   public_subnet_assign_ipv6_address_on_creation   = false
