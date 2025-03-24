@@ -6,6 +6,7 @@ on:
     paths-ignore:
       - "**/*.tf"
       - "**/*.tfvars"
+      - "**/*.tftpl"
 
 # Disable permissions for all available scopes.
 permissions: {}

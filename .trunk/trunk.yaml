@@ -2,19 +2,19 @@
 # To learn more about the format of this file, see https://docs.trunk.io/reference/trunk-yaml
 version: 0.1
 cli:
-  version: 1.22.7
+  version: 1.22.11
 # Trunk provides extensibility via plugins. (https://docs.trunk.io/plugins)
 plugins:
   sources:
     - id: trunk
-      ref: v1.6.4
+      ref: v1.6.7
       uri: https://github.com/trunk-io/plugins
 # Many linters and tools depend on runtimes - configure them here. (https://docs.trunk.io/runtimes)
 runtimes:
   enabled:
     - python@3.10.8
     - go@1.21.0
-    - node@18.12.1
+    - node@18.20.5
 # This is the section where you manage your linters. (https://docs.trunk.io/check/configuration)
 lint:
   disabled:
@@ -23,17 +23,17 @@ lint:
     - trivy
   enabled:
     - dotenv-linter@3.3.0
-    - renovate@38.133.0
-    - terraform@1.9.7:
+    - renovate@39.210.1
+    - tofu@1.9.0:
         commands: [fmt, validate]
-    - yamllint@1.35.1
-    - trufflehog@3.82.13
-    - oxipng@9.1.2
+    - yamllint@1.36.2
+    - trufflehog@3.88.18
+    - oxipng@9.1.4
     - git-diff-check@SYSTEM
-    - actionlint@1.7.3
-    - markdownlint@0.42.0
-    - prettier@3.3.3
-    - tflint@0.53.0
+    - actionlint@1.7.7
+    - markdownlint@0.44.0
+    - prettier@3.5.3
+    - tflint@0.55.1
   definitions:
     - name: tflint
       environment:
@@ -41,10 +41,14 @@ lint:
           value: ${workspace}/.trunk/configs/.tflint_trunk.hcl
         - name: TFLINT_PLUGIN_DIR
           value: ${workspace}/.trunk/plugins/
-    - name: terraform
+    - name: tofu
       environment:
-        - name: TF_CLI_CONFIG_FILE
-          value: ${env.XDG_CONFIG_HOME}/terraform/terraformrc
+        - name: XDG_CONFIG_HOME
+          value: ${env.XDG_CONFIG_HOME}
+          optional: true
+        - name: XDG_DATA_HOME
+          value: ${env.XDG_DATA_HOME}
+          optional: true
         #! Disabled because VSCode workspace fails with these set and deep check
         #! does not work without them
         # - name: AWS_ACCESS_KEY_ID
