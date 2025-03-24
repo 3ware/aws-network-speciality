@@ -1,7 +1,7 @@
 module "vpc" {
   source = "git::https://github.com/terraform-aws-modules/terraform-aws-vpc.git?ref=e226cc15a7b8f62fd0e108792fea66fa85bcb4b9"
 
-  name = "a4l-vpc1-${var.environment}"
+  name = "a4l-vpc1-${var.aws_environment}"
   azs  = ["us-east-1a", "us-east-1b", "us-east-1c"]
 
   cidr = "10.16.0.0/16"

@@ -1,14 +1,6 @@
-variable "environment" {
+variable "aws_environment" {
   description = "(Required) The AWS environment to deploy resources to"
   type        = string
-  default     = "development"
-  nullable    = false
-}
-
-variable "service" {
-  description = "(Required) The AWS service being deployed"
-  type        = string
-  default     = "vpc"
   nullable    = false
 }
 
