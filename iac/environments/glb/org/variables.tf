@@ -4,6 +4,13 @@ variable "aws_environment" {
   default     = "glb"
 }
 
+variable "aws_project" {
+  description = "(Required) The AWS project to deploy resources to"
+  type        = string
+  default     = "aws-network-speciality"
+  nullable    = false
+}
+
 variable "aws_region" {
   description = "The AWS region to deploy the resources into"
   type        = string

@@ -3,7 +3,7 @@ provider "aws" {
   region  = var.aws_region
   default_tags {
     tags = {
-      "3ware:project-id"      = "aws-network-speciality"
+      "3ware:project-id"      = var.aws_project
       "3ware:environment"     = var.aws_environment
       "3ware:service"         = var.aws_service
       "3ware:managed-by-tofu" = true
@@ -16,7 +16,7 @@ terraform {
   required_providers {
     aws = {
       source  = "hashicorp/aws"
-      version = ">= 4.0, < 6.0"
+      version = "~>5.90"
     }
   }
 
@@ -24,7 +24,7 @@ terraform {
     organization = "3ware"
     hostname     = "app.terraform.io"
     workspaces {
-      project = "aws-network-speciality"
+      project = var.aws_project
       name    = "${var.aws_environment}-${var.aws_region}-${var.aws_service}"
     }
   }
