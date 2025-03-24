@@ -10,17 +10,22 @@ terraform {
 
   cloud {
     organization = "3ware"
+    hostname     = "app.terraform.io"
 
     workspaces {
       project = var.aws_project
-      name    = "${var.aws_environment}-${var.aws_region}-${var.aws_service}"
+      name    = "${var.aws_service}-${var.aws_region}-${var.aws_environment}"
 
     }
   }
 }
 
 provider "aws" {
-  region = var.aws_region
+  region  = var.aws_region
+  profile = "3ware-org"
+  assume_role {
+    role_arn = "arn:aws:iam::272778370237:role/OrganizationAccountAccessRole"
+  }
 
   default_tags {
     tags = {
@@ -36,7 +41,8 @@ provider "aws" {
 module "vpc" {
   source = "../../modules/vpc"
 
-  aws_environment = "development"
+  aws_environment = var.aws_environment
+  vpc_cidr_block  = "10.16.0.0/16"
   trusted_ips     = ["192.0.2.1/32"]
   ssh_key         = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIMNSplDEGibL7tUs87JsuwnHmDA2uSB+M2kUlOQuI0Fc"
 }
