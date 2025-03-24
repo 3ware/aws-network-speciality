@@ -21,11 +21,7 @@ terraform {
 }
 
 provider "aws" {
-  region  = var.aws_region
-  profile = "3ware-org"
-  assume_role {
-    role_arn = "arn:aws:iam::272778370237:role/OrganizationAccountAccessRole"
-  }
+  region = var.aws_region
 
   default_tags {
     tags = {

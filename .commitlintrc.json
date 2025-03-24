@@ -19,6 +19,7 @@
         "deps",
         "gha",
         "iac",
+        "iac-deploy",
         "org",
         "ossf",
         "pr-check",
