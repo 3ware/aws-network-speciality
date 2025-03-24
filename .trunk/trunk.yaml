@@ -71,6 +71,10 @@ lint:
     - linters: [prettier]
       paths:
         - "**/*.enc.yaml"
+    - linters: [tofu, trivy, checkov]
+      # Do not check modules because they do not have providers configured
+      paths:
+        - iac/modules
 actions:
   enabled:
     - commitlint
