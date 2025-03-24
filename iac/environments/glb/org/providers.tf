@@ -25,7 +25,7 @@ terraform {
     hostname     = "app.terraform.io"
     workspaces {
       project = var.aws_project
-      name    = "${var.aws_environment}-${var.aws_region}-${var.aws_service}"
+      name    = "${var.aws_service}-${var.aws_region}-${var.aws_environment}"
     }
   }
 }

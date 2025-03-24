@@ -1,7 +1,7 @@
 variable "aws_environment" {
   description = "The environment to deploy the AWS resources into"
   type        = string
-  default     = "glb"
+  default     = "global"
 }
 
 variable "aws_project" {
