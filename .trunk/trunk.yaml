@@ -2,19 +2,19 @@
 # To learn more about the format of this file, see https://docs.trunk.io/reference/trunk-yaml
 version: 0.1
 cli:
-  version: 1.22.7
+  version: 1.22.11
 # Trunk provides extensibility via plugins. (https://docs.trunk.io/plugins)
 plugins:
   sources:
     - id: trunk
-      ref: v1.6.4
+      ref: v1.6.7
       uri: https://github.com/trunk-io/plugins
 # Many linters and tools depend on runtimes - configure them here. (https://docs.trunk.io/runtimes)
 runtimes:
   enabled:
     - python@3.10.8
     - go@1.21.0
-    - node@18.12.1
+    - node@18.20.5
 # This is the section where you manage your linters. (https://docs.trunk.io/check/configuration)
 # tofu, TFLint and other IAC linters should not be enabled here. They are enabled in user.yaml
 # iac-deploy workflow runs 'iac' linters in CI, so trunk does not need to.

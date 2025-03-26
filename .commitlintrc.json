@@ -13,18 +13,23 @@
       [
         "cdn",
         "commitlint",
+        "dev",
         "delete-run",
         "dep-review",
         "deps",
         "gha",
         "iac",
+        "iac-deploy",
         "org",
         "ossf",
         "pr-check",
+        "prd",
         "renovate",
         "release",
+        "stg",
         "terraform-docs",
         "trunk",
+        "uat",
         "vpc",
         "vpc-peer"
       ]
