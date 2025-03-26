@@ -5,9 +5,10 @@ on:
     types: [closed]
     branches: [main]
     paths:
-      - "**/*.tf"
-      - "**/*.tfvars"
-      - "**/*.tftpl"
+      - iac/**/*.tf
+      - iac/**/*.tfvars
+      - iac/**/*.tftpl
+      - iac/**/*.hcl
 
 # Disable permissions for all available scopes
 permissions: {}
@@ -16,7 +17,7 @@ jobs:
   terraform-docs:
     if: ${{ github.event.pull_request.merged == true }}
     name: Terraform Docs
-    uses: 3ware/workflows/.github/workflows/terraform-docs.yaml@7880d6b986d1d689f5d219e901b863f1378fea9c # v4.4.0
+    uses: 3ware/workflows/.github/workflows/terraform-docs.yaml@00ec3367b300beacba7ec64b1e4cc784d496d983 # v4.15.1
     secrets: inherit
     with:
-      tf-directory: terraform
+      tf-directory: iac
