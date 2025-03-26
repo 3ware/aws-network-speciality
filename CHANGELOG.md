@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2.0.0](https://github.com/3ware/aws-network-speciality/compare/v1.6.0...v2.0.0) (2025-03-26)
+
+
+### ⚠ BREAKING CHANGES
+
+* **iac:** Use child modules for multi environment (#78)
+
+### Enhancement
+
+* **iac:** Use child modules for multi environment ([#78](https://github.com/3ware/aws-network-speciality/issues/78)) ([6eeff5b](https://github.com/3ware/aws-network-speciality/commit/6eeff5bdca3f586c1f367d737cf493cc414b955f))
+
 ## [1.6.0](https://github.com/3ware/aws-network-speciality/compare/v1.5.3...v1.6.0) (2024-11-07)
 
 
