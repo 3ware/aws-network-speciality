@@ -17,3 +17,9 @@ variable "aws_service" {
   description = "(Required) The AWS service being deployed"
   type        = string
 }
+
+variable "is_local" {
+  description = "(Optional) Is this a local environment? `true` sets the provider profile for credentials. `false` does not."
+  type        = bool
+  default     = false
+}

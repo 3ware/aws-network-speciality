@@ -135,17 +135,19 @@ resource "aws_security_group" "internal" {
 }
 
 resource "aws_key_pair" "a4l" {
+  count      = var.ssh_key != "" ? 1 : 0
   key_name   = "A4L"
   public_key = var.ssh_key
 }
 
 resource "aws_instance" "a4l_bastion" {
+  count                       = var.ssh_key != "" ? 1 : 0
   ami                         = "ami-033b95fb8079dc481"
   instance_type               = "t2.micro"
   subnet_id                   = module.vpc.public_subnets[0]
   associate_public_ip_address = true
   vpc_security_group_ids      = [aws_security_group.bastion.id]
-  key_name                    = aws_key_pair.a4l.key_name
+  key_name                    = aws_key_pair.a4l[count.index].key_name
 
   tags = {
     Name = "A4L-BASTION"
@@ -153,11 +155,12 @@ resource "aws_instance" "a4l_bastion" {
 }
 
 resource "aws_instance" "a4l_internal" {
+  count                  = var.ssh_key != "" ? 1 : 0
   ami                    = "ami-033b95fb8079dc481"
   instance_type          = "t2.micro"
   subnet_id              = module.vpc.private_subnets[1]
   vpc_security_group_ids = [aws_security_group.internal.id]
-  key_name               = aws_key_pair.a4l.key_name
+  key_name               = aws_key_pair.a4l[count.index].key_name
 
   tags = {
     Name = "A4L-INTERNAL-TEST"
