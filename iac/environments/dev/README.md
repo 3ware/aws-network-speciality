@@ -28,6 +28,7 @@ No resources.
 | <a name="input_aws_project"></a> [aws\_project](#input\_aws\_project) | (Required) The AWS project to deploy resources to | `string` | n/a | yes |
 | <a name="input_aws_region"></a> [aws\_region](#input\_aws\_region) | (Required) The AWS region to deploy resources to | `string` | n/a | yes |
 | <a name="input_aws_service"></a> [aws\_service](#input\_aws\_service) | (Required) The AWS service being deployed | `string` | n/a | yes |
+| <a name="input_is_local"></a> [is\_local](#input\_is\_local) | (Optional) Is this a local environment? `true` sets the provider profile for credentials. `false` does not. | `bool` | `false` | no |
 
 ## Outputs
 
