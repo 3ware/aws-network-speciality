@@ -17,7 +17,10 @@ variable "trusted_ips" {
 }
 
 variable "ssh_key" {
-  description = "(Optional) Trusted keys for bastion host access"
+  description = <<EOT
+    (Optional) Trusted keys for bastion host access.
+    Providing an SSH key will create the EC2 instances. Leaving it empty will not create the EC2 instances.
+    EOT
   type        = string
-  default     = "value"
+  default     = ""
 }
