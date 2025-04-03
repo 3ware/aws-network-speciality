@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2.1.0](https://github.com/3ware/aws-network-speciality/compare/v2.0.0...v2.1.0) (2025-04-03)
+
+
+### Features
+
+* **dev:** Create vpc and networking ([#89](https://github.com/3ware/aws-network-speciality/issues/89)) ([2a995fa](https://github.com/3ware/aws-network-speciality/commit/2a995fa5b39d0abdbf0d3b8e2f52723745ea319e))
+
 ## [2.0.0](https://github.com/3ware/aws-network-speciality/compare/v1.6.0...v2.0.0) (2025-03-26)
 
 
