@@ -140,6 +140,7 @@ resource "aws_key_pair" "a4l" {
 }
 
 resource "aws_instance" "a4l_bastion" {
+  count                       = var.ssh_key != "" ? 1 : 0
   ami                         = "ami-033b95fb8079dc481"
   instance_type               = "t2.micro"
   subnet_id                   = module.vpc.public_subnets[0]
@@ -153,6 +154,7 @@ resource "aws_instance" "a4l_bastion" {
 }
 
 resource "aws_instance" "a4l_internal" {
+  count                  = var.ssh_key != "" ? 1 : 0
   ami                    = "ami-033b95fb8079dc481"
   instance_type          = "t2.micro"
   subnet_id              = module.vpc.private_subnets[1]
