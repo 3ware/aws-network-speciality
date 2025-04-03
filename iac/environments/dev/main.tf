@@ -22,6 +22,9 @@ terraform {
 
 provider "aws" {
   region = var.aws_region
+  # Use the 3ware-org profile locally. TF_VAR_isLocal is set in the .envrc file
+  # A role will be assumed using the aws-configure-credentials action in CI
+  profile = var.is_local == true ? "3ware-org" : null
 
   default_tags {
     tags = {
@@ -39,6 +42,4 @@ module "vpc" {
 
   aws_environment = var.aws_environment
   vpc_cidr_block  = "10.16.0.0/16"
-  trusted_ips     = ["192.0.2.1/32"]
-  ssh_key         = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIMNSplDEGibL7tUs87JsuwnHmDA2uSB+M2kUlOQuI0Fc"
 }
