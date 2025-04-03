@@ -1,11 +1,16 @@
 output "bastion_hostname" {
   description = "DNS name of the bastion host"
-  value       = "ec2-user@${aws_instance.a4l_bastion[0].public_dns}"
+  # host creation is conditional based on the presence of var.ssk_key
+  # if the key is provided the host is created and the value is: aws_instance.a4l_bastion[0].public_dns
+  # if the key is not provided the host is not created and the value is: null
+  # the one function will return the first element of the list or null if the list is empty
+  # i.e if the resource is created, so is the output and vice versa. Without this the configuration is invalid
+  value = one(aws_instance.a4l_bastion[*].public_dns)
 }
 
 output "internal_host_ip" {
   description = "IP of the host deployed to private subnet"
-  value       = "ec2-user@${aws_instance.a4l_internal[0].private_ip}"
+  value       = one(aws_instance.a4l_internal[*].private_ip)
 }
 
 output "availability_zones" {
