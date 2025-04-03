@@ -22,9 +22,6 @@ terraform {
 
 provider "aws" {
   region = var.aws_region
-  # Use the 3ware-org profile locally. TF_VAR_isLocal is set in the .envrc file
-  # A role will be assumed using the aws-configure-credentials action in CI
-  profile = var.is_local == true ? "3ware-org" : null
 
   default_tags {
     tags = {
