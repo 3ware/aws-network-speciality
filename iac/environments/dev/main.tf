@@ -39,6 +39,4 @@ module "vpc" {
 
   aws_environment = var.aws_environment
   vpc_cidr_block  = "10.16.0.0/16"
-  trusted_ips     = ["192.0.2.1/32"]
-  ssh_key         = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIMNSplDEGibL7tUs87JsuwnHmDA2uSB+M2kUlOQuI0Fc"
 }

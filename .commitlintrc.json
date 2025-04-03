@@ -28,6 +28,7 @@
         "release",
         "stg",
         "terraform-docs",
+        "tflint",
         "trunk",
         "uat",
         "vpc",
