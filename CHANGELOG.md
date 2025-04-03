@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2.2.0](https://github.com/3ware/aws-network-speciality/compare/v2.1.0...v2.2.0) (2025-04-03)
+
+
+### Features
+
+* **dev:** Add local provider configuration for testing ([#91](https://github.com/3ware/aws-network-speciality/issues/91)) ([87fb5f9](https://github.com/3ware/aws-network-speciality/commit/87fb5f9e4dc0489004637bd7c99e89b4b6c046b4))
+
 ## [2.1.0](https://github.com/3ware/aws-network-speciality/compare/v2.0.0...v2.1.0) (2025-04-03)
 
 
