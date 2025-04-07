@@ -39,10 +39,10 @@
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| <a name="input_aws_environment"></a> [aws\_environment](#input\_aws\_environment) | (Required) The AWS environment to deploy resources to | `string` | n/a | yes |
+| <a name="input_aws_environment"></a> [aws\_environment](#input\_aws\_environment) | (Required) The AWS environment to deploy resources to.<br>    Valid values are: development, testing, staging, production. | `string` | n/a | yes |
 | <a name="input_ssh_key"></a> [ssh\_key](#input\_ssh\_key) | (Optional) Trusted keys for bastion host access.<br>    Providing an SSH key will create the EC2 instances. Leaving it empty will not create the EC2 instances. | `string` | `""` | no |
 | <a name="input_trusted_ips"></a> [trusted\_ips](#input\_trusted\_ips) | (Optional) Trusted IP addresses for bastion host access | `set(string)` | `[]` | no |
-| <a name="input_vpc_cidr_block"></a> [vpc\_cidr\_block](#input\_vpc\_cidr\_block) | (Required) The CIDR block for the VPC | `string` | n/a | yes |
+| <a name="input_vpc_cidr_block"></a> [vpc\_cidr\_block](#input\_vpc\_cidr\_block) | (Required) A valid CIDR block to assign to the VPC | `string` | n/a | yes |
 
 ## Outputs
 
