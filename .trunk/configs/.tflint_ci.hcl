@@ -1,3 +1,4 @@
+# TFLint configuration file for CI/CD pipelines
 plugin "terraform" {
   enabled = true
   preset = "all"
@@ -8,5 +9,6 @@ plugin "aws" {
   version = "0.33.0"
   source  = "github.com/terraform-linters/tflint-ruleset-aws"
 
+  # Deep check can be enabled in CI/CD pipelines, where AWS credentials are set
   deep_check = true
 }

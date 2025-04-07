@@ -1,3 +1,4 @@
+# TFLint configuration file for Trunk CLI
 plugin "terraform" {
   enabled = true
   preset = "all"

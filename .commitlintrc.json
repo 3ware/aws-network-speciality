@@ -13,10 +13,9 @@
       [
         "cdn",
         "commitlint",
-        "dev",
         "delete-run",
-        "dep-review",
         "deps",
+        "dev",
         "gha",
         "iac",
         "iac-deploy",
