@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2.3.0](https://github.com/3ware/aws-network-speciality/compare/v2.2.0...v2.3.0) (2025-04-07)
+
+
+### Features
+
+* **iac:** Add variable validation to VPC module ([#98](https://github.com/3ware/aws-network-speciality/issues/98)) ([8d0e6c8](https://github.com/3ware/aws-network-speciality/commit/8d0e6c87b5af569d2be66d7a2e669c0b34c14c56))
+
 ## [2.2.0](https://github.com/3ware/aws-network-speciality/compare/v2.1.0...v2.2.0) (2025-04-03)
 
 
