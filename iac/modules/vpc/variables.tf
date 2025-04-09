@@ -6,11 +6,11 @@ variable "aws_environment" {
   type        = string
   nullable    = false
   validation {
-    condition = contains(["development", "testing", "staging", "production"], var.aws_environment)
+    condition = contains(["sandbox", "development", "testing", "staging", "production"], var.aws_environment)
     error_message = format(
       "Invalid environment provided. Received: '%s', Require: '%v'.\n%s",
       var.aws_environment,
-      join(", ", ["development", "testing", "staging", "production"]),
+      join(", ", ["sandbox", "development", "testing", "staging", "production"]),
       "Change the environment variable value to one that is permitted."
     )
   }
