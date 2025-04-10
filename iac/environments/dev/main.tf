@@ -15,7 +15,6 @@ terraform {
     workspaces {
       project = var.aws_project
       name    = "${var.aws_service}-${var.aws_region}-${var.aws_environment}"
-
     }
   }
 }
