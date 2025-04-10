@@ -22,4 +22,5 @@ jobs:
     uses: 3ware/workflows/.github/workflows/iac-deploy.yaml@feat-iac-deploy-var
     secrets: inherit
     with:
+      aws-region: eu-west-2
       environment: development
