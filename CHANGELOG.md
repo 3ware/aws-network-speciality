@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2.4.0](https://github.com/3ware/aws-network-speciality/compare/v2.3.0...v2.4.0) (2025-04-10)
+
+
+### Enhancement
+
+* **dev:** Remove development value for aws_evnironment variable ([#99](https://github.com/3ware/aws-network-speciality/issues/99)) ([7a5aa61](https://github.com/3ware/aws-network-speciality/commit/7a5aa6123596a53b33b3d4b859d6244be9af7c2e))
+
 ## [2.3.0](https://github.com/3ware/aws-network-speciality/compare/v2.2.0...v2.3.0) (2025-04-07)
 
 
