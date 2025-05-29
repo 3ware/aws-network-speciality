@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2.12.0](https://github.com/3ware/aws-network-speciality/compare/v2.11.0...v2.12.0) (2025-05-29)
+
+
+### Features
+
+* **iac:** Update aws provider to ~> 5.99 ([#115](https://github.com/3ware/aws-network-speciality/issues/115)) ([1e94ddd](https://github.com/3ware/aws-network-speciality/commit/1e94ddd6bff8cc1c8f6fe0e22d37547835561201))
+
 ## [2.11.0](https://github.com/3ware/aws-network-speciality/compare/v2.10.0...v2.11.0) (2025-05-28)
 
 
