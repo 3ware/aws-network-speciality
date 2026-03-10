@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2.19.0](https://github.com/3ware/aws-network-speciality/compare/v2.18.0...v2.19.0) (2026-03-10)
+
+
+### Features
+
+* **tflint:** Update terraform-linters/tflint-ruleset-aws to v0.46.0 ([#171](https://github.com/3ware/aws-network-speciality/issues/171)) ([5d82421](https://github.com/3ware/aws-network-speciality/commit/5d824212cc195b39a5aab2dabfccb94bc2e9a36d))
+
 ## [2.18.0](https://github.com/3ware/aws-network-speciality/compare/v2.17.0...v2.18.0) (2026-01-01)
 
 
